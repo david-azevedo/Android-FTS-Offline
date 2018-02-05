@@ -1,39 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
-    android:orientation="vertical"
+    android:fillViewport="true"
     android:padding="16dp"
     tools:context="com.company.david.fts.EnterDataActivity">
 
-    <EditText
-        android:id="@+id/et_hospital_name"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:hint="Nome do hospital"/>
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/et_doctor_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:hint="Nome do médico"/>
+        <EditText
+            android:id="@+id/et_hospital_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Nome do hospital"
+            android:inputType="textAutoComplete"/>
 
-    <EditText
-        android:id="@+id/et_transcript"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:hint="Transcript"/>
+        <EditText
+            android:id="@+id/et_doctor_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Nome do médico"
+            android:inputType="textAutoComplete"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/bt_submit_data"
-        android:layout_marginTop="16dp"
-        android:text="Enviar"/>
+        <EditText
+            android:id="@+id/et_transcript"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Transcript"/>
 
-</LinearLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/bt_submit_data"
+            android:layout_marginTop="16dp"
+            android:text="Enviar"/>
+<!--
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/bt_insert_fake_data"
+            android:layout_marginTop="16dp"
+            android:text="Adicionar entradas"/>
+-->
+    </LinearLayout>
+</ScrollView>

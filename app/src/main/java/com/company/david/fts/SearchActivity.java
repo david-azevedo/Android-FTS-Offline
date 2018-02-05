@@ -17,9 +17,14 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        mSearchData = (EditText) findViewById(R.id.et_search_query);
-        mSearchResults = (TextView) findViewById(R.id.tv_display_results);
         setTitle("Search data");
+
+        mSearchData = findViewById(R.id.et_search_query);
+        mSearchResults = findViewById(R.id.tv_display_results);
+
+        // TODO add search funcionality
+        // TODO implement TextWatcher for when text changes in the et_search_query
+
     }
 
     private void searchQuery(View v) {

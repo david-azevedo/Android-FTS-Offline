@@ -6,10 +6,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.company.david.fts.Data.DatabaseTable;
+
 public class MainActivity extends AppCompatActivity {
 
     private Button mButtonEnterData;
     private Button mButtonSearchData;
+
+    // TODO add a button for view data
+
+    // TODO add view data activity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
