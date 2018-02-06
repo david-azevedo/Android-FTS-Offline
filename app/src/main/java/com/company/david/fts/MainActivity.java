@@ -12,10 +12,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Button mButtonEnterData;
     private Button mButtonSearchData;
-
-    // TODO add a button for view data
-
-    // TODO add view data activity
+    private Button mButtonViewData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
         mButtonEnterData = findViewById(R.id.bt_enter_data);
         mButtonSearchData = findViewById(R.id.bt_search_data);
+        mButtonViewData = findViewById(R.id.bt_view_data);
 
         mButtonEnterData.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -37,6 +35,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mButtonViewData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, ViewDataActivity.class);
                 startActivity(intent);
             }
         });

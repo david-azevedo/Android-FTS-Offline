@@ -2,8 +2,10 @@ package com.company.david.fts.Data;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
 
 public class DatabaseTable {
@@ -12,9 +14,9 @@ public class DatabaseTable {
 
     private static DatabaseTable sDatabaseTable = null;
     // Columns
-    private static final String COL_DOCTOR = "DOCTOR";
-    private static final String COL_HOSPITAL = "HOSPITAL";
-    private static final String COL_TRANSCRIPT = "TRANSCRIPT";
+    public static final String COL_DOCTOR = "DOCTOR";
+    public static final String COL_HOSPITAL = "HOSPITAL";
+    public static final String COL_TRANSCRIPT = "TRANSCRIPT";
 
     private static final String DATABASE_NAME = "APPOINTMENT";
     private static final String FTS_VIRTUAL_TABLE = "FTS";
@@ -89,6 +91,47 @@ public class DatabaseTable {
 
             return mDatabase.insert(FTS_VIRTUAL_TABLE, null, cv);
         }
+    }
+
+    //Function to search given a query string
+    public Cursor getWordMatches(String query, String[] columns) {
+            /*
+            * By using the table name in the match clause we are searching all
+            * columns of the virtual table.
+            * */
+        String selection = FTS_VIRTUAL_TABLE + " MATCH ?";
+        String[] selectionArgs = new String[] {query+"*"};
+
+        return query(selection, selectionArgs, columns);
+    }
+
+    //Function to get all data rows
+    public Cursor getAllRows() {
+        // TODO select all rows from the database
+        return null;
+    };
+
+    //Function to get number of entries
+    public long getRowCount() {
+        // TODO SELECT COUNT(*) FROM FTS
+        return 0;
+    }
+
+    //Helper function to query the database
+    private Cursor query(String selection, String[] selectionArgs, String[] columns) {
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        builder.setTables(FTS_VIRTUAL_TABLE);
+
+        Cursor cursor = builder.query(mDatabaseOpenHelper.getReadableDatabase(),
+                columns, selection, selectionArgs, null, null, null);
+
+        if (cursor == null) {
+            return null;
+        } else if (!cursor.moveToFirst()) {
+            cursor.close();
+            return null;
+        }
+        return cursor;
     }
 
     public void onDestroy() {
