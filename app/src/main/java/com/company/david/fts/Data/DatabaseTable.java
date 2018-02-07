@@ -10,6 +10,8 @@ import android.util.Log;
 
 public class DatabaseTable {
 
+    // TODO ver tokenizer
+
     private static final String TAG = "AppointmentDatabase";
 
     private static DatabaseTable sDatabaseTable = null;
@@ -100,6 +102,7 @@ public class DatabaseTable {
             * columns of the virtual table.
             * */
         String selection = FTS_VIRTUAL_TABLE + " MATCH ?";
+        // TODO add trick for *half word* here
         String[] selectionArgs = new String[] {query+"*"};
 
         return query(selection, selectionArgs, columns);
@@ -107,8 +110,7 @@ public class DatabaseTable {
 
     //Function to get all data rows
     public Cursor getAllRows() {
-        // TODO select all rows from the database
-        return null;
+        return mDatabaseOpenHelper.getReadableDatabase().rawQuery("SELECT * FROM " + FTS_VIRTUAL_TABLE, null);
     };
 
     //Function to get number of entries

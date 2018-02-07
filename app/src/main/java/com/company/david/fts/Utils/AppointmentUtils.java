@@ -27,6 +27,9 @@ public class AppointmentUtils {
             "Aquele médico meio vesgo"
     };
 
+    // TODO introduzir random search word nos transcripts para conseguir testar melhor a pesquisa de informação
+    private static final String[] SEARCH_TOKENS = new String[] {};
+
     public static final String[] getFakeData() {
         String hospital = FAKE_HOSPITALS[mRANDOM.nextInt(FAKE_HOSPITALS.length)];
         String doctor = FAKE_DOCTORS[mRANDOM.nextInt(FAKE_DOCTORS.length)];

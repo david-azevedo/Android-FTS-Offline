@@ -20,16 +20,10 @@
         android:id="@+id/bt_search_action"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Search"
-        android:onClick="searchQuery" />
+        android:text="Search" />
 
-    <ScrollView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_show_results"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:id="@+id/tv_display_results"/>
-    </ScrollView>
+        android:layout_height="wrap_content"/>
 </LinearLayout>

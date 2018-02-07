@@ -161,19 +161,5 @@ public class LoremIpsum
     {
         return new LoremIpsum(sentences).toString();
     }
-
-    public static final void
-    main(String[] args)
-    {
-        System.out.println("Demo mode: generating 10 lines of lorem ipsum " +
-                "garbage.");
-        LoremIpsum loremIpsum = new LoremIpsum(10);
-        String[] lines = loremIpsum.getLines();
-
-        for (int i = 0; i < lines.length; i++)
-        {
-            System.out.println((i+1) + "\t" + lines[i]);
-        }
-    }
 }
 
