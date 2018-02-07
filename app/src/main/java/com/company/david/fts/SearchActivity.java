@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +27,8 @@ public class SearchActivity extends AppCompatActivity {
     private Button mSearchButton;
     private RecyclerView mResults;
     private SearchResultsAdapter mAdapter;
+    private SearchTask mAsyncTask;
+    private String mQuery = "";
     private Toast mToast = null;
 
     @Override
@@ -38,11 +42,53 @@ public class SearchActivity extends AppCompatActivity {
         mSearchButton = findViewById(R.id.bt_search_action);
         mResults = findViewById(R.id.rv_show_results);
 
+        mSearchData.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
+                if(before > count)
+                    return;
+
+                String query = mSearchData.getText().toString().trim();
+
+                if (query.equals("") || query.equals(mQuery))
+                    return;
+
+                mQuery = query;
+                if(mAsyncTask != null) {
+                    mAsyncTask.cancel(true);
+                }
+                mAsyncTask = new SearchTask();
+                mAsyncTask.execute(query);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                /*
                 String query = mSearchData.getText().toString().trim();
-                new SearchTask().execute(query);
+
+                if (query.equals("") || query.equals(mQuery))
+                    return;
+
+                mQuery = query;
+                if(mAsyncTask != null) {
+                    mAsyncTask.cancel(true);
+                }
+                mAsyncTask = new SearchTask();
+                mAsyncTask.execute(query);
+                */
             }
         });
 
@@ -53,8 +99,10 @@ public class SearchActivity extends AppCompatActivity {
         mResults.setAdapter(mAdapter);
 
 
+        // TODO ver autocomplete
         // TODO implement TextWatcher for when text changes in the et_search_query
         // TODO cancel the async task and restart the query
+        // TODO replace AsyncTask with Loader
 
     }
 
@@ -66,13 +114,15 @@ public class SearchActivity extends AppCompatActivity {
         @Override
         protected Cursor doInBackground(String... args) {
             startTime = mDate.getTime();
+            if(isCancelled())
+                return null;
             return DatabaseTable.getInstance(getBaseContext()).getWordMatches(args[0],null);
         }
 
         @Override
         protected void onPostExecute(Cursor cursor) {
 
-            if(cursor ==  null) {
+            if(cursor ==  null || isCancelled()) {
                 showToast("No results");
                 return;
             }
@@ -81,6 +131,9 @@ public class SearchActivity extends AppCompatActivity {
             showToast( cursor.getCount() + " results in " + timeElapsed + " ms.");
             clearResults();
             if(cursor.getCount() <= 0)
+                return;
+
+            if(isCancelled())
                 return;
 
             mAdapter.swapCursor(cursor);

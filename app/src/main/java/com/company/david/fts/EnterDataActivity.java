@@ -96,6 +96,9 @@ public class EnterDataActivity extends AppCompatActivity {
         String doctor = mDoctorName.getText().toString();
         String transcript = mTranscript.getText().toString();
 
+        if (hospital.equals("") || doctor.equals("") || transcript.equals(""))
+            return -1;
+
         long result = DatabaseTable.getInstance(getBaseContext()).addNewEntry(hospital,doctor,transcript);
 
         return result;
