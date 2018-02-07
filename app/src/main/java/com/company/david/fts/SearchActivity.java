@@ -51,10 +51,11 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
 
+                // If the user is deleting, then don't query again
                 if(before > count)
                     return;
 
-                String query = mSearchData.getText().toString().trim();
+                String query = charSequence.toString().trim();
 
                 if (query.equals("") || query.equals(mQuery))
                     return;
@@ -100,8 +101,6 @@ public class SearchActivity extends AppCompatActivity {
 
 
         // TODO ver autocomplete
-        // TODO implement TextWatcher for when text changes in the et_search_query
-        // TODO cancel the async task and restart the query
         // TODO replace AsyncTask with Loader
 
     }

@@ -7,7 +7,7 @@
     android:padding="16dp"
     tools:context="com.company.david.fts.SearchActivity">
 
-    <EditText
+    <AutoCompleteTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/et_search_query"
