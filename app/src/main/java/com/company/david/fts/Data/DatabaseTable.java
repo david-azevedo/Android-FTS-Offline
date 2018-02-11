@@ -3,6 +3,7 @@ package com.company.david.fts.Data;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
@@ -124,6 +125,9 @@ public class DatabaseTable {
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(FTS_VIRTUAL_TABLE);
 
+        // FIXME trying to call matchinfo function
+        columns = new String[] {"matchinfo(" + FTS_VIRTUAL_TABLE+ ") as MATCHINFO","*"};
+
         Cursor cursor = builder.query(mDatabaseOpenHelper.getReadableDatabase(),
                 columns, selection, selectionArgs, null, null, null);
 
@@ -133,6 +137,11 @@ public class DatabaseTable {
             cursor.close();
             return null;
         }
+
+        // FIXME logging cursor output
+        Log.w("THIS IS A TAG", "Printing cursor now");
+        Log.w("THIS IS A TAG", DatabaseUtils.dumpCursorToString(cursor));
+
         return cursor;
     }
 

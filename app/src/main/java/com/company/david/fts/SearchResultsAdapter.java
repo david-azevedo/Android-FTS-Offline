@@ -7,12 +7,15 @@ import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.company.david.fts.Data.DatabaseTable;
+
+import java.sql.Blob;
 
 import javax.xml.transform.Result;
 
@@ -42,6 +45,11 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
     @Override
     public void onBindViewHolder(ResultViewHolder holder, int position) {
         mCursor.moveToPosition(position);
+
+
+        // FIXME Apagar isto
+        byte[] blob = mCursor.getBlob(mCursor.getColumnIndex("MATCHINFO"));
+        Log.d("ADAPTER", blob.toString());
 
         String doctor = mCursor.getString(mCursor.getColumnIndex(DatabaseTable.COL_DOCTOR));
         String hospital = mCursor.getString(mCursor.getColumnIndex(DatabaseTable.COL_HOSPITAL));
