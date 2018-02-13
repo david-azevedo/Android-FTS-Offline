@@ -126,7 +126,9 @@ public class DatabaseTable {
 
     //Function to get number of entries
     public long getRowCount() {
-        // TODO SELECT COUNT(*) FROM FTS
+        // TODO test this
+        Cursor cursor = query("COUNT(*)", null, null);
+        Log.d("DATABASE TABLE", DatabaseUtils.dumpCursorToString(cursor));
         return 0;
     }
 
