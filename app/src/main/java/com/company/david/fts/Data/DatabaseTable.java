@@ -11,29 +11,39 @@ import android.util.Log;
 
 public class DatabaseTable {
 
-    // TODO ver tokenizer
-
     private static final String TAG = "AppointmentDatabase";
+    private static final String DATABASE_NAME = "APPOINTMENT";
+    private static final String FTS_VIRTUAL_TABLE = "FTS";
+    private static final int DATABASE_VERSION = 1;
 
     private static DatabaseTable sDatabaseTable = null;
     // Columns
     public static final String COL_DOCTOR = "DOCTOR";
     public static final String COL_HOSPITAL = "HOSPITAL";
     public static final String COL_TRANSCRIPT = "TRANSCRIPT";
+    public static final String COL_MATCHINFO = "MATCHINFO";
+    public static final String COL_SNIPPET = "SNIPPET";
+    public static final String COL_OFFSETS = "OFFSETS";
 
-    private static final String DATABASE_NAME = "APPOINTMENT";
-    private static final String FTS_VIRTUAL_TABLE = "FTS";
-    private static final int DATABASE_VERSION = 1;
+    public static final String ALL_COLUMNS = "*";
+    public static final String MATCHINFO = "matchinfo(" + FTS_VIRTUAL_TABLE + ") as " + COL_MATCHINFO;
+    public static final String SNIPPET = "snippet(" + FTS_VIRTUAL_TABLE + ") as " + COL_SNIPPET;
+    public static final String OFFSETS = "offsets(" + FTS_VIRTUAL_TABLE + ") as " + COL_OFFSETS;
 
     public final DatabaseOpenHelper mDatabaseOpenHelper;
 
     // Wrapper method for add entry
-    public long addNewEntry(String hospital, String doctor, String transcript) {
+    public long addNewEntry(String doctor, String hospital, String transcript) {
         Log.d("CONSULTATION","\n\n\nHospital: "
                 + hospital + "\nDoctor: "
                 + doctor + "\nTranscript:\n\""
                 + transcript + "\"");
         return mDatabaseOpenHelper.addEntry(doctor,hospital,transcript);
+    }
+
+    // TODO complete the function
+    public static int[] parseMatchInfoBlob(byte[] blob) {
+        return null;
     }
 
     private DatabaseTable(Context context) {
@@ -137,11 +147,6 @@ public class DatabaseTable {
             cursor.close();
             return null;
         }
-
-        // FIXME logging cursor output
-        Log.w("THIS IS A TAG", "Printing cursor now");
-        Log.w("THIS IS A TAG", DatabaseUtils.dumpCursorToString(cursor));
-
         return cursor;
     }
 

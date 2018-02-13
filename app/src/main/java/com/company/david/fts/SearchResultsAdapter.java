@@ -49,13 +49,14 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
 
         // FIXME Apagar isto
         byte[] blob = mCursor.getBlob(mCursor.getColumnIndex("MATCHINFO"));
-        Log.d("ADAPTER", blob.toString());
+        for(int i = 0; i < blob.length; i++) {
+            Log.d("ADAPTER", Byte.toString(blob[i]));
+        }
 
         String doctor = mCursor.getString(mCursor.getColumnIndex(DatabaseTable.COL_DOCTOR));
         String hospital = mCursor.getString(mCursor.getColumnIndex(DatabaseTable.COL_HOSPITAL));
         String transcript = mCursor.getString(mCursor.getColumnIndex(DatabaseTable.COL_TRANSCRIPT));
 
-        // TODO tentar fazer highlight ao texto pesquisado.
         holder.doctorName.setText(doctor);
         holder.hospitalName.setText(hospital);
         holder.displayTranscript.setText(transcript);

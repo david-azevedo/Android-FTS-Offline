@@ -99,7 +99,7 @@ public class EnterDataActivity extends AppCompatActivity {
         if (hospital.equals("") || doctor.equals("") || transcript.equals(""))
             return -1;
 
-        long result = DatabaseTable.getInstance(getBaseContext()).addNewEntry(hospital,doctor,transcript);
+        long result = DatabaseTable.getInstance(getBaseContext()).addNewEntry(doctor,hospital,transcript);
 
         return result;
 

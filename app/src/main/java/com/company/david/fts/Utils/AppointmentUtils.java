@@ -34,6 +34,6 @@ public class AppointmentUtils {
         String hospital = FAKE_HOSPITALS[mRANDOM.nextInt(FAKE_HOSPITALS.length)];
         String doctor = FAKE_DOCTORS[mRANDOM.nextInt(FAKE_DOCTORS.length)];
         String transcript = LoremIpsum.randomCorpus(mRANDOM.nextInt(5) + 5);
-        return new String[] {hospital, doctor, transcript};
+        return new String[] {doctor, hospital, transcript};
     }
 }
