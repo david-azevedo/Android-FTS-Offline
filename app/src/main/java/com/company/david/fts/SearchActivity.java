@@ -12,6 +12,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -23,7 +25,7 @@ import java.util.Date;
 
 public class SearchActivity extends AppCompatActivity {
 
-    private EditText mSearchData;
+    private AutoCompleteTextView mSearchData;
     private Button mSearchButton;
     private RecyclerView mResults;
     private SearchResultsAdapter mAdapter;
@@ -41,6 +43,12 @@ public class SearchActivity extends AppCompatActivity {
         mSearchData = findViewById(R.id.et_search_query);
         mSearchButton = findViewById(R.id.bt_search_action);
         mResults = findViewById(R.id.rv_show_results);
+
+        // TODO Delete this
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, new String[] {"This is me", "just testing", "this feature"});
+        mSearchData.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        // FIXME ver porque é que isto não funciona
 
         mSearchData.addTextChangedListener(new TextWatcher() {
             @Override
@@ -98,7 +106,6 @@ public class SearchActivity extends AppCompatActivity {
         mResults.setHasFixedSize(true);
         mAdapter = new SearchResultsAdapter(this);
         mResults.setAdapter(mAdapter);
-
 
         // TODO ver autocomplete
         // TODO replace AsyncTask with Loader

@@ -11,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/et_search_query"
-        android:inputType="textAutoComplete"
         android:layout_marginTop="16dp"
+        android:completionThreshold="3"
         android:hint="Search"
         />
 
