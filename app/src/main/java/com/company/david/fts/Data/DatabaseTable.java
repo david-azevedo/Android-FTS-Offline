@@ -107,14 +107,33 @@ public class DatabaseTable {
     }
 
     //Function to search given a query string
-    public Cursor getWordMatches(String query, String[] columns) {
-            /*
-            * By using the table name in the match clause we are searching all
-            * columns of the virtual table.
-            * */
+    public Cursor getWordMatches(String query, String[] columns,boolean orSwitch) {
+        /*
+        * By using the table name in the match clause we are searching all
+        * columns of the virtual table.
+        * */
+
+        // TODO implementar ranking com TF-IDF
+        String[] selectionArgs = new String[1];
+
+        if (orSwitch) {// Pesquisar com OR
+            String[] terms = query.trim().split(" ");
+            String args = "";
+            for(int i = 0; i < terms.length; i++) {
+                args += terms[i] + "*";
+
+                if(i != terms.length - 1) {
+                    args += " OR ";
+                }
+            }
+
+            selectionArgs[0] = args;
+        } else { // Pesquisar com AND
+            selectionArgs[0] = query + "*";
+        }
+
         String selection = FTS_VIRTUAL_TABLE + " MATCH ?";
         // TODO add trick for *half word* here
-        String[] selectionArgs = new String[] {query+"*"};
 
         return query(selection, selectionArgs, columns);
     }

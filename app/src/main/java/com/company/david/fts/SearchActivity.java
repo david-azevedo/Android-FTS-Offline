@@ -3,7 +3,9 @@ package com.company.david.fts;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.provider.ContactsContract;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +29,7 @@ import java.util.Date;
 public class SearchActivity extends AppCompatActivity {
 
     private AutoCompleteTextView mSearchData;
+    private Switch mSwitch;
     private Button mSearchButton;
     private RecyclerView mResults;
     private SearchResultsAdapter mAdapter;
@@ -43,12 +47,7 @@ public class SearchActivity extends AppCompatActivity {
         mSearchData = findViewById(R.id.et_search_query);
         mSearchButton = findViewById(R.id.bt_search_action);
         mResults = findViewById(R.id.rv_show_results);
-
-        // TODO Delete this
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, new String[] {"This is me", "just testing", "this feature"});
-        mSearchData.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-        // FIXME ver porque é que isto não funciona
+        mSwitch = findViewById(R.id.sw_and_or);
 
         mSearchData.addTextChangedListener(new TextWatcher() {
             @Override
@@ -83,8 +82,15 @@ public class SearchActivity extends AppCompatActivity {
         });
 
         mSearchButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View view) {
+
+                if (mSwitch.isChecked()) {
+                    showToast("It is ON");
+                } else {
+                    showToast("It is OFF");
+                }
                 /*
                 String query = mSearchData.getText().toString().trim();
 
@@ -122,7 +128,7 @@ public class SearchActivity extends AppCompatActivity {
             startTime = mDate.getTime();
             if(isCancelled())
                 return null;
-            return DatabaseTable.getInstance(getBaseContext()).getWordMatches(args[0],null);
+            return DatabaseTable.getInstance(getBaseContext()).getWordMatches(args[0],null, mSwitch.isChecked());
         }
 
         @Override
