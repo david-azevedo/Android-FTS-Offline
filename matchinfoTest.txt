@@ -1,0 +1,15 @@
+CADA VALOR É SEGUIDO POR 3 ZEROS!!!
+cols : doctor | hospital
+phrases : joao | bom
+P:2[,0,0,0,]
+C:2[,0,0,0,]
+X:
+nº nesta row |nº em todas as rows | nº rows onde onde existe pelo menos 1 phrase na column 
+doctor E joao
+0,[0,0,0,]1,[0,0,0,]1,[0,0,0,]
+hospital E joao
+1,[0,0,0,]2,[0,0,0,]2,[0,0,0,]
+doctor E bom
+1,[0,0,0,]1,[0,0,0,]1,[0,0,0,]
+hospital E bom
+0,[0,0,0,]0,[0,0,0,]0,[0,0,0]
