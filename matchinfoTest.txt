@@ -1,15 +1,14 @@
-CADA VALOR É SEGUIDO POR 3 ZEROS!!!
 cols : doctor | hospital
 phrases : joao | bom
-P:2[,0,0,0,]
-C:2[,0,0,0,]
+P:2
+C:2
 X:
 nº nesta row |nº em todas as rows | nº rows onde onde existe pelo menos 1 phrase na column 
 doctor E joao
-0,[0,0,0,]1,[0,0,0,]1,[0,0,0,]
+0,1,1
 hospital E joao
-1,[0,0,0,]2,[0,0,0,]2,[0,0,0,]
+1,2,2
 doctor E bom
-1,[0,0,0,]1,[0,0,0,]1,[0,0,0,]
+1,1,1
 hospital E bom
-0,[0,0,0,]0,[0,0,0,]0,[0,0,0]
+0,0,0

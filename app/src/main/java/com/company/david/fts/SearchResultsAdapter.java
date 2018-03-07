@@ -3,6 +3,7 @@ package com.company.david.fts;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.company.david.fts.Data.DatabaseTable;
 
 import java.sql.Blob;
+import java.util.Arrays;
 
 import javax.xml.transform.Result;
 
@@ -46,11 +48,12 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
     public void onBindViewHolder(ResultViewHolder holder, int position) {
         mCursor.moveToPosition(position);
 
-
         // FIXME Apagar isto
-        byte[] blob = mCursor.getBlob(mCursor.getColumnIndex("MATCHINFO"));
-        for(int i = 0; i < blob.length; i++) {
-            Log.d("ADAPTER", Byte.toString(blob[i]));
+
+        int colIndex = mCursor.getColumnIndex(DatabaseTable.COL_MATCHINFO);
+        if(colIndex >= 0) {
+            byte[] blob = mCursor.getBlob(colIndex);
+            int[] parsed = DatabaseTable.parseMatchInfoBlob(blob);
         }
 
         String doctor = mCursor.getString(mCursor.getColumnIndex(DatabaseTable.COL_DOCTOR));

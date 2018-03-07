@@ -16,11 +16,14 @@ public class DatabaseTable {
     private static final String FTS_VIRTUAL_TABLE = "FTS";
     private static final int DATABASE_VERSION = 1;
 
+    private static final int MY_256 = 256;
+
     private static DatabaseTable sDatabaseTable = null;
     // Columns
     public static final String COL_DOCTOR = "DOCTOR";
     public static final String COL_HOSPITAL = "HOSPITAL";
     public static final String COL_TRANSCRIPT = "TRANSCRIPT";
+    public static final String COL_TOKENIZE = "tokenize=unicode61";
     public static final String COL_MATCHINFO = "MATCHINFO";
     public static final String COL_SNIPPET = "SNIPPET";
     public static final String COL_OFFSETS = "OFFSETS";
@@ -41,9 +44,19 @@ public class DatabaseTable {
         return mDatabaseOpenHelper.addEntry(doctor,hospital,transcript);
     }
 
-    // TODO complete the function
+    // TODO use function
     public static int[] parseMatchInfoBlob(byte[] blob) {
-        return null;
+
+        int length = blob.length;
+        int[] result = new int[length/4];
+        for(int i = 0; i < length; i += 4) {
+            result[i/4] = blob[i] +
+                        (blob[i+1] * MY_256) +
+                        (blob[i + 2] * MY_256 * MY_256) +
+                        (blob[i +3 ] * MY_256 * MY_256 * MY_256);
+        }
+
+        return result;
     }
 
     private DatabaseTable(Context context) {
@@ -67,7 +80,8 @@ public class DatabaseTable {
                         " USING fts3 (" +
                         COL_DOCTOR + ", " +
                         COL_HOSPITAL + ", " +
-                        COL_TRANSCRIPT + ")";
+                        COL_TRANSCRIPT + ", " +
+                        COL_TOKENIZE + ")";
 
         DatabaseOpenHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -133,7 +147,6 @@ public class DatabaseTable {
         }
 
         String selection = FTS_VIRTUAL_TABLE + " MATCH ?";
-        // TODO add trick for *half word* here
 
         return query(selection, selectionArgs, columns);
     }
@@ -157,10 +170,10 @@ public class DatabaseTable {
         builder.setTables(FTS_VIRTUAL_TABLE);
 
         // FIXME trying to call matchinfo function
-        columns = new String[] {"matchinfo(" + FTS_VIRTUAL_TABLE+ ") as MATCHINFO","*"};
+        String[] mColumns = new String[] {"matchinfo(" + FTS_VIRTUAL_TABLE+ ") as MATCHINFO","*"};
 
         Cursor cursor = builder.query(mDatabaseOpenHelper.getReadableDatabase(),
-                columns, selection, selectionArgs, null, null, null);
+                mColumns, selection, selectionArgs, null, null, null);
 
         if (cursor == null) {
             return null;
@@ -168,6 +181,9 @@ public class DatabaseTable {
             cursor.close();
             return null;
         }
+
+        Log.d("DATABASETABLE",cursor.getColumnNames().toString());
+
         return cursor;
     }
 
