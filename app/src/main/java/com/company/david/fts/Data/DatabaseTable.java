@@ -9,6 +9,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class DatabaseTable {
 
     private static final String TAG = "AppointmentDatabase";
@@ -170,7 +173,7 @@ public class DatabaseTable {
         builder.setTables(FTS_VIRTUAL_TABLE);
 
         // FIXME trying to call matchinfo function
-        String[] mColumns = new String[] {"matchinfo(" + FTS_VIRTUAL_TABLE+ ") as MATCHINFO","*"};
+        String[] mColumns = new String[] {MATCHINFO,"*"};
 
         Cursor cursor = builder.query(mDatabaseOpenHelper.getReadableDatabase(),
                 mColumns, selection, selectionArgs, null, null, null);

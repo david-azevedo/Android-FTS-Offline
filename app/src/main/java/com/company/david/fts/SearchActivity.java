@@ -49,6 +49,7 @@ public class SearchActivity extends AppCompatActivity {
         mResults = findViewById(R.id.rv_show_results);
         mSwitch = findViewById(R.id.sw_and_or);
 
+        /* TODO uncomment this for on text entered search
         mSearchData.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -80,7 +81,7 @@ public class SearchActivity extends AppCompatActivity {
 
             }
         });
-
+        */
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
@@ -91,7 +92,7 @@ public class SearchActivity extends AppCompatActivity {
                 } else {
                     showToast("It is OFF");
                 }
-                /*
+
                 String query = mSearchData.getText().toString().trim();
 
                 if (query.equals("") || query.equals(mQuery))
@@ -103,7 +104,7 @@ public class SearchActivity extends AppCompatActivity {
                 }
                 mAsyncTask = new SearchTask();
                 mAsyncTask.execute(query);
-                */
+
             }
         });
 

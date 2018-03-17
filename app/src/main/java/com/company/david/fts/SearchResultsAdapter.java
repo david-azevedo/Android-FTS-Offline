@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.company.david.fts.Data.DatabaseTable;
+import com.company.david.fts.Utils.TfIdfHelper;
 
 import java.sql.Blob;
 import java.util.Arrays;
@@ -48,13 +49,20 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
     public void onBindViewHolder(ResultViewHolder holder, int position) {
         mCursor.moveToPosition(position);
 
-        // FIXME Apagar isto
-
+        // FIXME Apagar desde aqui
         int colIndex = mCursor.getColumnIndex(DatabaseTable.COL_MATCHINFO);
+
         if(colIndex >= 0) {
+
             byte[] blob = mCursor.getBlob(colIndex);
             int[] parsed = DatabaseTable.parseMatchInfoBlob(blob);
+
+            int[] shortened = TfIdfHelper.shortenInitialArray(parsed);
+
+            Log.d("DUMPING", Arrays.toString(parsed));
+            Log.d("DUMPING", Arrays.toString(shortened));
         }
+        // FIXME Apagar até aqui
 
         String doctor = mCursor.getString(mCursor.getColumnIndex(DatabaseTable.COL_DOCTOR));
         String hospital = mCursor.getString(mCursor.getColumnIndex(DatabaseTable.COL_HOSPITAL));
