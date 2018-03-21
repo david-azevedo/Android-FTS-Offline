@@ -110,6 +110,15 @@ public class TfIdfHelper {
             valuesArray.add(accumulator);
         }
 
+        // TODO print
+        getOrderedIndexes(valuesArray);
+
+
+        Log.d("TF IDF",valuesArray.toString());
+    }
+
+    private static int[] getOrderedIndexes(ArrayList<Integer> valuesArray) {
+
         // TODO Verificar este código e passar para 1 função
         int[] orderIndexes = new int[valuesArray.size()];
 
@@ -125,6 +134,6 @@ public class TfIdfHelper {
             orderIndexes[t++] = index;
         }
 
-        Log.d("TF IDF",valuesArray.toString());
+        return orderIndexes;
     }
 }
