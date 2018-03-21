@@ -48,28 +48,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
     @Override
     public void onBindViewHolder(ResultViewHolder holder, int position) {
 
-        //FIXME uncomment me
-        //mCursor.moveToPosition(position);
-
-        // FIXME Apagar desde aqui
-        TfIdfHelper.calcTfIdf(mContext, mCursor);
-
         mCursor.moveToPosition(position);
-        int colIndex = mCursor.getColumnIndex(DatabaseTable.COL_MATCHINFO);
-
-        if(colIndex >= 0) {
-
-            DatabaseTable.getInstance(this.mContext).getRowCount();
-
-            byte[] blob = mCursor.getBlob(colIndex);
-            int[] parsed = DatabaseTable.parseMatchInfoBlob(blob);
-
-            int[] shortened = TfIdfHelper.shortenInitialArray(parsed);
-
-            Log.d("DUMPING", Arrays.toString(parsed));
-            Log.d("DUMPING", Arrays.toString(shortened));
-        }
-        // FIXME Apagar até aqui
 
         String doctor = mCursor.getString(mCursor.getColumnIndex(DatabaseTable.COL_DOCTOR));
         String hospital = mCursor.getString(mCursor.getColumnIndex(DatabaseTable.COL_HOSPITAL));
@@ -88,6 +67,26 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
 
     void swapCursor(Cursor newCursor) {
         mCursor = newCursor;
+
+        // FIXME Apagar desde aqui
+        TfIdfHelper.calcTfIdf(mContext, mCursor);
+
+        int colIndex = mCursor.getColumnIndex(DatabaseTable.COL_MATCHINFO);
+
+        if(colIndex >= 0) {
+
+            DatabaseTable.getInstance(this.mContext).getRowCount();
+
+            byte[] blob = mCursor.getBlob(colIndex);
+            int[] parsed = DatabaseTable.parseMatchInfoBlob(blob);
+
+            int[] shortened = TfIdfHelper.shortenInitialArray(parsed);
+
+            Log.d("DUMPING", Arrays.toString(parsed));
+            Log.d("DUMPING", Arrays.toString(shortened));
+        }
+        // FIXME Apagar até aqui
+
         notifyDataSetChanged();
     }
 

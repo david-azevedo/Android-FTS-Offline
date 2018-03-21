@@ -108,6 +108,8 @@ public class TfIdfHelper {
             valuesArray.add(accumulator);
         }
 
+        // TODO mapear os ids do valuesArray ordenados
+        
         Log.d("TF IDF",valuesArray.toString());
     }
 }
