@@ -8,6 +8,8 @@ import com.company.david.fts.Data.DatabaseTable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class TfIdfHelper {
 
@@ -108,8 +110,21 @@ public class TfIdfHelper {
             valuesArray.add(accumulator);
         }
 
-        // TODO mapear os ids do valuesArray ordenados
-        
+        // TODO Verificar este código e passar para 1 função
+        int[] orderIndexes = new int[valuesArray.size()];
+
+        TreeMap<Integer, Integer> map = new TreeMap<>();
+
+        for(int i = 0; i < valuesArray.size(); i++) {
+            map.put(valuesArray.get(i) * valuesArray.size() + i, i);
+        }
+
+        int t = 0;
+
+        for(Integer index: map.values()) {
+            orderIndexes[t++] = index;
+        }
+
         Log.d("TF IDF",valuesArray.toString());
     }
 }
