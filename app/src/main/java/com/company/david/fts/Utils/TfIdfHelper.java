@@ -1,8 +1,13 @@
 package com.company.david.fts.Utils;
 
+import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.company.david.fts.Data.DatabaseTable;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class TfIdfHelper {
 
@@ -56,24 +61,53 @@ public class TfIdfHelper {
     * the information provided by the matchinfo auxiliary
     * function from the module FTS3 from SQLite.
     */
-    // TODO Complete ranking function
-    public static void calcTfIdf(Cursor cursor) {
+    public static void calcTfIdf(Context context, Cursor cursor) {
 
-        int size = cursor.getCount();
+        // Array to store the tfxidf value of each row from the result
+        ArrayList<Integer> valuesArray = new ArrayList<>();
 
-        cursor.moveToFirst();
+        // Total number of rows in the table
+        int totalDocs = (int) DatabaseTable.getInstance(context).getRowCount();
 
-        // Iterating over each result;
-        while(cursor.moveToNext()) {
+        // TODO talvez pedir a contagem de linhas onde cada termo aparece (pedidos extra à DB)
+        // TODO usar o max dos documentos onde aparece o termo (por coluna)
+        // Iterating over each result (row);
+        for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 
+            // Index of the matchinfo column in the cursor
             int colIndex = cursor.getColumnIndex(DatabaseTable.COL_MATCHINFO);
-
+            // Retrieving information
             byte[] blob = cursor.getBlob(colIndex);
-
+            // Parsing the byte blob to an int array
             int[] parsed = DatabaseTable.parseMatchInfoBlob(blob);
-
+            // Collapsing information from all columns to a single row
             int[] shortened = TfIdfHelper.shortenInitialArray(parsed);
+            // Number of phrases in the query
+            int phrases = shortened[0];
+            // Variable to accumulate all tfxIdf values for a given row
+            int accumulator = 0;
 
+            // Go through all the phrases and calculate each tfxidf value
+            for(int i = 0; i < phrases; i++) {
+
+                // Term Frequency
+                int tf = shortened[(i * 3) + 2];
+                // Docs with hits
+                int aux = shortened[(i * 3) + 4];
+                // Docs with hits caped to be lower than totalDocs
+                int docsWithHits = (aux < totalDocs)? aux : totalDocs;
+                // Inverted document frequency
+                double idf = Math.log(totalDocs / docsWithHits);
+                // Tf x Idf value for 1 phrase
+                int result = (int) (tf * idf);
+                // Add value to the total of the row
+                accumulator += result;
+            }
+
+            // Add the row value to the result array
+            valuesArray.add(accumulator);
         }
+
+        Log.d("TF IDF",valuesArray.toString());
     }
 }

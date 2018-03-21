@@ -47,12 +47,19 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
 
     @Override
     public void onBindViewHolder(ResultViewHolder holder, int position) {
-        mCursor.moveToPosition(position);
+
+        //FIXME uncomment me
+        //mCursor.moveToPosition(position);
 
         // FIXME Apagar desde aqui
+        TfIdfHelper.calcTfIdf(mContext, mCursor);
+
+        mCursor.moveToPosition(position);
         int colIndex = mCursor.getColumnIndex(DatabaseTable.COL_MATCHINFO);
 
         if(colIndex >= 0) {
+
+            DatabaseTable.getInstance(this.mContext).getRowCount();
 
             byte[] blob = mCursor.getBlob(colIndex);
             int[] parsed = DatabaseTable.parseMatchInfoBlob(blob);

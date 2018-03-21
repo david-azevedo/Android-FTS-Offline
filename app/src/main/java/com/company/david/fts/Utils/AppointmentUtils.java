@@ -2,6 +2,8 @@ package com.company.david.fts.Utils;
 
 import java.util.Random;
 
+// TODO adicinar real transcripts
+
 public class AppointmentUtils {
 
     private static final Random mRANDOM = new Random();
@@ -27,7 +29,6 @@ public class AppointmentUtils {
             "Aquele médico meio vesgo"
     };
 
-    // TODO introduzir random search word nos transcripts para conseguir testar melhor a pesquisa de informação
     private static final String[] SEARCH_TOKENS = new String[] {};
 
     public static final String[] getFakeData() {

@@ -114,7 +114,6 @@ public class SearchActivity extends AppCompatActivity {
         mAdapter = new SearchResultsAdapter(this);
         mResults.setAdapter(mAdapter);
 
-        // TODO ver autocomplete
         // TODO replace AsyncTask with Loader
 
     }

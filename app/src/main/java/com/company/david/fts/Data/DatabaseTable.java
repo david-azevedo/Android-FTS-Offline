@@ -47,7 +47,6 @@ public class DatabaseTable {
         return mDatabaseOpenHelper.addEntry(doctor,hospital,transcript);
     }
 
-    // TODO use function
     public static int[] parseMatchInfoBlob(byte[] blob) {
 
         int length = blob.length;
@@ -129,8 +128,6 @@ public class DatabaseTable {
         * By using the table name in the match clause we are searching all
         * columns of the virtual table.
         * */
-
-        // TODO implementar ranking com TF-IDF
         String[] selectionArgs = new String[1];
 
         if (orSwitch) {// Pesquisar com OR
@@ -161,10 +158,12 @@ public class DatabaseTable {
 
     //Function to get number of entries
     public long getRowCount() {
-        // TODO test this
-        Cursor cursor = query("COUNT(*)", null, null);
-        Log.d("DATABASE TABLE", DatabaseUtils.dumpCursorToString(cursor));
-        return 0;
+
+        long res = DatabaseUtils.queryNumEntries(mDatabaseOpenHelper.mDatabase,FTS_VIRTUAL_TABLE);
+
+        Log.d("DATABASETABLE:", "Number of entries: " + res);
+
+        return res;
     }
 
     //Helper function to query the database
@@ -172,7 +171,6 @@ public class DatabaseTable {
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(FTS_VIRTUAL_TABLE);
 
-        // FIXME trying to call matchinfo function
         String[] mColumns = new String[] {MATCHINFO,"*"};
 
         Cursor cursor = builder.query(mDatabaseOpenHelper.getReadableDatabase(),
