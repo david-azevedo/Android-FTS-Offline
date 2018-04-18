@@ -7,6 +7,7 @@ import android.util.Log;
 import com.company.david.fts.Data.DatabaseTable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -65,6 +66,8 @@ public class TfIdfHelper {
     */
     public static void calcTfIdf(Context context, Cursor cursor) {
 
+        if (cursor == null)
+            return;
         // Array to store the tfxidf value of each row from the result
         ArrayList<Integer> valuesArray = new ArrayList<>();
 
@@ -111,10 +114,10 @@ public class TfIdfHelper {
         }
 
         // TODO print
-        getOrderedIndexes(valuesArray);
+        Log.d("TF IDF INDEXES", Arrays.toString(getOrderedIndexes(valuesArray)));
 
 
-        Log.d("TF IDF",valuesArray.toString());
+        Log.d("TF IDF VALUES",valuesArray.toString());
     }
 
     private static int[] getOrderedIndexes(ArrayList<Integer> valuesArray) {

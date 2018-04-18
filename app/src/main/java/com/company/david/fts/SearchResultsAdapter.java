@@ -50,26 +50,8 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
 
         mCursor.moveToPosition(position);
 
-        String doctor = mCursor.getString(mCursor.getColumnIndex(DatabaseTable.COL_DOCTOR));
-        String hospital = mCursor.getString(mCursor.getColumnIndex(DatabaseTable.COL_HOSPITAL));
-        String transcript = mCursor.getString(mCursor.getColumnIndex(DatabaseTable.COL_TRANSCRIPT));
-
-        holder.doctorName.setText(doctor);
-        holder.hospitalName.setText(hospital);
-        holder.displayTranscript.setText(transcript);
-    }
-
-    @Override
-    public int getItemCount() {
-        if (null == mCursor) return 0;
-        return mCursor.getCount();
-    }
-
-    void swapCursor(Cursor newCursor) {
-        mCursor = newCursor;
-
         // FIXME Apagar desde aqui
-        TfIdfHelper.calcTfIdf(mContext, mCursor);
+        //TfIdfHelper.calcTfIdf(mContext, mCursor);
 
         int colIndex = mCursor.getColumnIndex(DatabaseTable.COL_MATCHINFO);
 
@@ -87,6 +69,26 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
         }
         // FIXME Apagar até aqui
 
+
+        mCursor.moveToPosition(position);
+
+        String doctor = mCursor.getString(mCursor.getColumnIndex(DatabaseTable.COL_DOCTOR));
+        String hospital = mCursor.getString(mCursor.getColumnIndex(DatabaseTable.COL_HOSPITAL));
+        String transcript = mCursor.getString(mCursor.getColumnIndex(DatabaseTable.COL_TRANSCRIPT));
+
+        holder.doctorName.setText(doctor);
+        holder.hospitalName.setText(hospital);
+        holder.displayTranscript.setText(transcript);
+    }
+
+    @Override
+    public int getItemCount() {
+        if (null == mCursor) return 0;
+        return mCursor.getCount();
+    }
+
+    void swapCursor(Cursor newCursor) {
+        mCursor = newCursor;
         notifyDataSetChanged();
     }
 
