@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
 
+import com.company.david.fts.Utils.TfIdfHelper;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -129,9 +131,13 @@ public class DatabaseTable {
         * columns of the virtual table.
         * */
         String[] selectionArgs = new String[1];
+        String[] terms = query.trim().split(" ");
+
+        // Setting the new search terms in the tfidf helper
+        TfIdfHelper.setSearchTerms(terms);
 
         if (orSwitch) {// Pesquisar com OR
-            String[] terms = query.trim().split(" ");
+
             String args = "";
             for(int i = 0; i < terms.length; i++) {
                 args += terms[i] + "*";
@@ -162,6 +168,15 @@ public class DatabaseTable {
         long res = DatabaseUtils.queryNumEntries(mDatabaseOpenHelper.mDatabase,FTS_VIRTUAL_TABLE);
 
         Log.d("DATABASETABLE:", "Number of entries: " + res);
+
+        return res;
+    }
+
+    public long getDocumentFrequency(String word) {
+
+        long res = DatabaseUtils.queryNumEntries(mDatabaseOpenHelper.mDatabase, FTS_VIRTUAL_TABLE, FTS_VIRTUAL_TABLE + " match " + word);
+
+        Log.d("DATABASETABLE:", "Number of columns with " + word + " : " + res);
 
         return res;
     }

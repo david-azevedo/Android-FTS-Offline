@@ -2,6 +2,7 @@ package com.company.david.fts.Utils;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.util.Log;
 
 import com.company.david.fts.Data.DatabaseTable;
@@ -14,6 +15,11 @@ import java.util.TreeMap;
 
 public class TfIdfHelper {
 
+    private static String[] searchTerms;
+
+    public static void setSearchTerms(String[] terms) {
+        searchTerms = terms;
+    }
     /* Function to reduce the amount of information the initial parsed array
     from matchinfo returns in order to calculate the tf * idf for each row
     */
@@ -66,6 +72,8 @@ public class TfIdfHelper {
     */
     public static void calcTfIdf(Context context, Cursor cursor) {
 
+        // TODO usar função e testar
+
         if (cursor == null)
             return;
         // Array to store the tfxidf value of each row from the result
@@ -74,8 +82,14 @@ public class TfIdfHelper {
         // Total number of rows in the table
         int totalDocs = (int) DatabaseTable.getInstance(context).getRowCount();
 
-        // TODO talvez pedir a contagem de linhas onde cada termo aparece (pedidos extra à DB)
-        // TODO usar o max dos documentos onde aparece o termo (por coluna)
+        // Document Frequency for each searched term
+        long[] documentFrequency = new long[searchTerms.length];
+
+        // Getting the document frequency for each terms from the database
+        for (int i = 0; i < searchTerms.length; i++) {
+            documentFrequency[i] = DatabaseTable.getInstance(context).getDocumentFrequency(searchTerms[i]);
+        }
+
         // Iterating over each result (row);
         for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 
@@ -97,12 +111,8 @@ public class TfIdfHelper {
 
                 // Term Frequency
                 int tf = shortened[(i * 3) + 2];
-                // Docs with hits
-                int aux = shortened[(i * 3) + 4];
-                // Docs with hits caped to be lower than totalDocs
-                int docsWithHits = (aux < totalDocs)? aux : totalDocs;
                 // Inverted document frequency
-                double idf = Math.log(totalDocs / docsWithHits);
+                double idf = documentFrequency[i];
                 // Tf x Idf value for 1 phrase
                 int result = (int) (tf * idf);
                 // Add value to the total of the row
