@@ -6,6 +6,7 @@ import android.database.DatabaseUtils;
 import android.util.Log;
 
 import com.company.david.fts.Data.DatabaseTable;
+import com.company.david.fts.ViewDataActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +21,7 @@ public class TfIdfHelper {
     public static void setSearchTerms(String[] terms) {
         searchTerms = terms;
     }
+
     /* Function to reduce the amount of information the initial parsed array
     from matchinfo returns in order to calculate the tf * idf for each row
     */
@@ -70,14 +72,14 @@ public class TfIdfHelper {
     * the information provided by the matchinfo auxiliary
     * function from the module FTS3 from SQLite.
     */
-    public static void calcTfIdf(Context context, Cursor cursor) {
+    public static int[] calcTfIdf(Context context, Cursor cursor) {
 
         // TODO usar função e testar
 
         if (cursor == null)
-            return;
+            return null;
         // Array to store the tfxidf value of each row from the result
-        ArrayList<Integer> valuesArray = new ArrayList<>();
+        ArrayList<Double> valuesArray = new ArrayList<>();
 
         // Total number of rows in the table
         int totalDocs = (int) DatabaseTable.getInstance(context).getRowCount();
@@ -87,7 +89,12 @@ public class TfIdfHelper {
 
         // Getting the document frequency for each terms from the database
         for (int i = 0; i < searchTerms.length; i++) {
+            // TODO Remove Log
+            Log.d("TFXIDF","Getting DF value for: " + searchTerms[i]);
+
             documentFrequency[i] = DatabaseTable.getInstance(context).getDocumentFrequency(searchTerms[i]);
+
+            Log.d("TFXIDF", "Value is: " + documentFrequency[i]);
         }
 
         // Iterating over each result (row);
@@ -104,7 +111,7 @@ public class TfIdfHelper {
             // Number of phrases in the query
             int phrases = shortened[0];
             // Variable to accumulate all tfxIdf values for a given row
-            int accumulator = 0;
+            double accumulator = 0;
 
             // Go through all the phrases and calculate each tfxidf value
             for(int i = 0; i < phrases; i++) {
@@ -112,9 +119,9 @@ public class TfIdfHelper {
                 // Term Frequency
                 int tf = shortened[(i * 3) + 2];
                 // Inverted document frequency
-                double idf = documentFrequency[i];
+                double idf = Math.log(totalDocs/documentFrequency[i]);
                 // Tf x Idf value for 1 phrase
-                int result = (int) (tf * idf);
+                double result = tf * idf;
                 // Add value to the total of the row
                 accumulator += result;
             }
@@ -123,28 +130,30 @@ public class TfIdfHelper {
             valuesArray.add(accumulator);
         }
 
-        // TODO print
-        Log.d("TF IDF INDEXES", Arrays.toString(getOrderedIndexes(valuesArray)));
-
+        // TODO Remove print
+        int[] result = getOrderedIndexes(valuesArray);
+        Log.d("TF IDF INDEXES", Arrays.toString(result));
 
         Log.d("TF IDF VALUES",valuesArray.toString());
+
+        return result;
     }
 
-    private static int[] getOrderedIndexes(ArrayList<Integer> valuesArray) {
+    private static int[] getOrderedIndexes(ArrayList<Double> valuesArray) {
 
         // TODO Verificar este código e passar para 1 função
         int[] orderIndexes = new int[valuesArray.size()];
 
-        TreeMap<Integer, Integer> map = new TreeMap<>();
+        TreeMap<Double, Integer> map = new TreeMap<>();
 
         for(int i = 0; i < valuesArray.size(); i++) {
             map.put(valuesArray.get(i) * valuesArray.size() + i, i);
         }
 
-        int t = 0;
+        int t = valuesArray.size();
 
         for(Integer index: map.values()) {
-            orderIndexes[t++] = index;
+            orderIndexes[--t] = index;
         }
 
         return orderIndexes;

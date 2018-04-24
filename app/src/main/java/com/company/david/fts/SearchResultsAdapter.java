@@ -27,6 +27,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
 
     private Cursor mCursor;
     private Context mContext;
+    private int[] offset = null;
 
     public SearchResultsAdapter(@NonNull Context context) {
         mContext = context;
@@ -48,29 +49,12 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
     @Override
     public void onBindViewHolder(ResultViewHolder holder, int position) {
 
-        mCursor.moveToPosition(position);
-
-        // FIXME Apagar desde aqui
-        //TfIdfHelper.calcTfIdf(mContext, mCursor);
-
-        int colIndex = mCursor.getColumnIndex(DatabaseTable.COL_MATCHINFO);
-
-        if(colIndex >= 0) {
-
-            DatabaseTable.getInstance(this.mContext).getRowCount();
-
-            byte[] blob = mCursor.getBlob(colIndex);
-            int[] parsed = DatabaseTable.parseMatchInfoBlob(blob);
-
-            int[] shortened = TfIdfHelper.shortenInitialArray(parsed);
-
-            Log.d("DUMPING", Arrays.toString(parsed));
-            Log.d("DUMPING", Arrays.toString(shortened));
+        if(offset != null) {
+            mCursor.moveToPosition(offset[position]);
+        } else {
+            mCursor.moveToPosition(position);
         }
-        // FIXME Apagar até aqui
 
-
-        mCursor.moveToPosition(position);
 
         String doctor = mCursor.getString(mCursor.getColumnIndex(DatabaseTable.COL_DOCTOR));
         String hospital = mCursor.getString(mCursor.getColumnIndex(DatabaseTable.COL_HOSPITAL));
@@ -88,7 +72,18 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
     }
 
     void swapCursor(Cursor newCursor) {
+
+        offset = null;
+
         mCursor = newCursor;
+
+        // TODO Check tf x idf call
+        if (mContext.getClass() == SearchActivity.class) {
+            Log.d("SEARCHRESULTSADAPTER", "Calculating Tf x Idf");
+            offset = TfIdfHelper.calcTfIdf(this.mContext, mCursor);
+            Log.d("SEARCHRESULTSADAPTER", "Tf x Idf finished");
+        }
+
         notifyDataSetChanged();
     }
 

@@ -174,7 +174,7 @@ public class DatabaseTable {
 
     public long getDocumentFrequency(String word) {
 
-        long res = DatabaseUtils.queryNumEntries(mDatabaseOpenHelper.mDatabase, FTS_VIRTUAL_TABLE, FTS_VIRTUAL_TABLE + " match " + word);
+        long res = DatabaseUtils.queryNumEntries(mDatabaseOpenHelper.mDatabase, FTS_VIRTUAL_TABLE, FTS_VIRTUAL_TABLE + " match '" + word + "'");
 
         Log.d("DATABASETABLE:", "Number of columns with " + word + " : " + res);
 
