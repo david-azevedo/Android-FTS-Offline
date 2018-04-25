@@ -79,7 +79,7 @@ public class TfIdfHelper {
         if (cursor == null)
             return null;
         // Array to store the tfxidf value of each row from the result
-        ArrayList<Double> valuesArray = new ArrayList<>();
+        ArrayList<double[]> valuesArray = new ArrayList<>();
 
         // Total number of rows in the table
         int totalDocs = (int) DatabaseTable.getInstance(context).getRowCount();
@@ -87,14 +87,13 @@ public class TfIdfHelper {
         // Document Frequency for each searched term
         long[] documentFrequency = new long[searchTerms.length];
 
+        // Using vector space model. Vector for the query
+        double[] querySpaceVector = new double[searchTerms.length];
+
         // Getting the document frequency for each terms from the database
         for (int i = 0; i < searchTerms.length; i++) {
-            // TODO Remove Log
-            Log.d("TFXIDF","Getting DF value for: " + searchTerms[i]);
-
             documentFrequency[i] = DatabaseTable.getInstance(context).getDocumentFrequency(searchTerms[i]);
-
-            Log.d("TFXIDF", "Value is: " + documentFrequency[i]);
+            querySpaceVector[i] = Math.log(totalDocs / documentFrequency[i]);
         }
 
         // Iterating over each result (row);
@@ -111,7 +110,7 @@ public class TfIdfHelper {
             // Number of phrases in the query
             int phrases = shortened[0];
             // Variable to accumulate all tfxIdf values for a given row
-            double accumulator = 0;
+            double[] accumulator = new double[phrases];
 
             // Go through all the phrases and calculate each tfxidf value
             for(int i = 0; i < phrases; i++) {
@@ -123,25 +122,70 @@ public class TfIdfHelper {
                 // Tf x Idf value for 1 phrase
                 double result = tf * idf;
                 // Add value to the total of the row
-                accumulator += result;
+                accumulator[i] = result;
             }
 
             // Add the row value to the result array
             valuesArray.add(accumulator);
         }
 
-        // TODO Remove print
-        int[] result = getOrderedIndexes(valuesArray);
-        Log.d("TF IDF INDEXES", Arrays.toString(result));
+        ArrayList<Double> values = calculateVectorSpaceModel(querySpaceVector, valuesArray);
+        int[] result = getOrderedIndexes(values);
 
+        // TODO Remove print
+        Log.d("TF IDF INDEXES", Arrays.toString(result));
         Log.d("TF IDF VALUES",valuesArray.toString());
 
         return result;
     }
 
+    // Function to calculate similarity between each document result and the query vector for ordering
+    private static ArrayList<Double> calculateVectorSpaceModel(double[] queryVector,ArrayList<double[]> documentVectors) {
+
+        // TODO test
+        ArrayList<Double> result = new ArrayList<>();
+        double queryNorm = getVectorNorm(queryVector);
+
+        for(int i = 0; i < documentVectors.size(); i++) {
+
+            double dotProduct = getDotProduct(queryVector, documentVectors.get(i));
+            double docNorm = getVectorNorm(documentVectors.get(i));
+
+            double value = dotProduct / (queryNorm * docNorm);
+
+            result.add(value);
+        }
+
+        return result;
+    }
+
+    // Helper function to get the euclidean distance from a vector
+    private static double getVectorNorm(double[] vector) {
+
+        double result = 0;
+
+        for(int i = 0; i < vector.length; i++) {
+            result += vector[i] * vector[i];
+        }
+
+        return Math.sqrt(result);
+    }
+
+    // Helper function to get the dot product of 2 vectors
+    private static double getDotProduct(double[] v1, double[] v2) {
+
+        double result = 0;
+
+        for(int i = 0; i < v1.length; i++) {
+            result += v1[i] * v2[i];
+        }
+
+        return result;
+    }
+
+    // Function to order the indexes for the results array
     private static int[] getOrderedIndexes(ArrayList<Double> valuesArray) {
 
-        // TODO Verificar este código e passar para 1 função
         int[] orderIndexes = new int[valuesArray.size()];
 
         TreeMap<Double, Integer> map = new TreeMap<>();
