@@ -10,6 +10,7 @@ import com.company.david.fts.ViewDataActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -74,8 +75,6 @@ public class TfIdfHelper {
     */
     public static int[] calcTfIdf(Context context, Cursor cursor) {
 
-        // TODO usar função e testar
-
         if (cursor == null)
             return null;
         // Array to store the tfxidf value of each row from the result
@@ -134,7 +133,7 @@ public class TfIdfHelper {
 
         // TODO Remove print
         Log.d("TF IDF INDEXES", Arrays.toString(result));
-        Log.d("TF IDF VALUES",valuesArray.toString());
+        Log.d("TF IDF VALUES",values.toString());
 
         return result;
     }
@@ -188,10 +187,15 @@ public class TfIdfHelper {
 
         int[] orderIndexes = new int[valuesArray.size()];
 
-        TreeMap<Double, Integer> map = new TreeMap<>();
+        TreeMap<Double, Integer> map = new TreeMap<>(new Comparator<Double>() {
+            @Override
+            public int compare(Double aDouble, Double t1) {
+                return (aDouble <= t1)? -1: 1;
+            }
+        });
 
         for(int i = 0; i < valuesArray.size(); i++) {
-            map.put(valuesArray.get(i) * valuesArray.size() + i, i);
+            map.put(valuesArray.get(i) + ((i + 1) * 0.001), i);
         }
 
         int t = valuesArray.size();
