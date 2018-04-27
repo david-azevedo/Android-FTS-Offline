@@ -150,6 +150,7 @@ public class TfIdfHelper {
             double dotProduct = getDotProduct(queryVector, documentVectors.get(i));
             double docNorm = getVectorNorm(documentVectors.get(i));
 
+            // TODO perceber de onde vêm os NaN
             double value = dotProduct / (queryNorm * docNorm);
 
             result.add(value);

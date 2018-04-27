@@ -130,7 +130,7 @@ public class EnterDataActivity extends AppCompatActivity {
         db.addNewEntry("Dr João Francisco","Centro de Saúde","Consulta de rotina. Continuar a medicação para a tensão arterial e colestrol.");
         */
 
-        /* PARTICIPANTE 3
+        /* PARTICIPANTE 3 */
         // A
         db.addNewEntry("Maria José","Hospital de santa Maria","Consulta de dermatologia. Eqzema no hipocondrico esquerdo. Fazer pomada nessa região");
         // B
@@ -151,7 +151,6 @@ public class EnterDataActivity extends AppCompatActivity {
         db.addNewEntry("Maria José","Hospital de Santo António","Dor de estômago. Realização de ecografia abdominal com alterações no hipocondrico esquerdo. Pára á toma de bupremorfina e faz lavagem de estômago e internamento hospitalar para estabilizar.");
         // J
         db.addNewEntry("André Maria","Hospital São José","Dores no hipocondrico direito. Toma metadona e bupremorfina.");
-        */
 
         /* PARTICIPANTE 4
         // A
@@ -199,12 +198,14 @@ public class EnterDataActivity extends AppCompatActivity {
         db.addNewEntry("Carlos Fernandes","Hospital de S. João","O paciente apresentava uma fratura no pulso. Foi receitado Feldene.");
         */
 
-        /* Fake data */
+        /* Fake data
         while (i <= 10) {
             String[] temp = AppointmentUtils.getFakeData();
             db.addNewEntry(temp[0], temp[1], temp[2]);
             i++;
         }
+
+        */
     }
 
     // Function to store data and show a Toast (run in the different thread)
