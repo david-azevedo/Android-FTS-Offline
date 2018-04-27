@@ -92,7 +92,7 @@ public class SearchActivity extends AppCompatActivity {
                 if (query.equals("") || query.equals(mQuery))
                     return;
 
-                query = query.replace(".","");
+                query = query.replaceAll("[.,]","");
                 mQuery = query;
                 if(mAsyncTask != null) {
                     mAsyncTask.cancel(true);

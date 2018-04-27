@@ -92,7 +92,7 @@ public class TfIdfHelper {
         // Getting the document frequency for each terms from the database
         for (int i = 0; i < searchTerms.length; i++) {
             documentFrequency[i] = DatabaseTable.getInstance(context).getDocumentFrequency(searchTerms[i]);
-            querySpaceVector[i] = Math.log(totalDocs / documentFrequency[i]);
+            querySpaceVector[i] = Math.log(((double)totalDocs) / documentFrequency[i]);
         }
 
         // Iterating over each result (row);
@@ -117,7 +117,7 @@ public class TfIdfHelper {
                 // Term Frequency
                 int tf = shortened[(i * 3) + 2];
                 // Inverted document frequency
-                double idf = Math.log(totalDocs/documentFrequency[i]);
+                double idf = Math.log(((double)totalDocs)/documentFrequency[i]);
                 // Tf x Idf value for 1 phrase
                 double result = tf * idf;
                 // Add value to the total of the row
@@ -141,7 +141,6 @@ public class TfIdfHelper {
     // Function to calculate similarity between each document result and the query vector for ordering
     private static ArrayList<Double> calculateVectorSpaceModel(double[] queryVector,ArrayList<double[]> documentVectors) {
 
-        // TODO test
         ArrayList<Double> result = new ArrayList<>();
         double queryNorm = getVectorNorm(queryVector);
 
@@ -150,7 +149,6 @@ public class TfIdfHelper {
             double dotProduct = getDotProduct(queryVector, documentVectors.get(i));
             double docNorm = getVectorNorm(documentVectors.get(i));
 
-            // TODO perceber de onde vêm os NaN
             double value = dotProduct / (queryNorm * docNorm);
 
             result.add(value);

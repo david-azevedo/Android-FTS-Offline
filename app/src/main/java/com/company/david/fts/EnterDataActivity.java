@@ -130,7 +130,7 @@ public class EnterDataActivity extends AppCompatActivity {
         db.addNewEntry("Dr João Francisco","Centro de Saúde","Consulta de rotina. Continuar a medicação para a tensão arterial e colestrol.");
         */
 
-        /* PARTICIPANTE 3 */
+        /* PARTICIPANTE 3
         // A
         db.addNewEntry("Maria José","Hospital de santa Maria","Consulta de dermatologia. Eqzema no hipocondrico esquerdo. Fazer pomada nessa região");
         // B
@@ -151,6 +151,7 @@ public class EnterDataActivity extends AppCompatActivity {
         db.addNewEntry("Maria José","Hospital de Santo António","Dor de estômago. Realização de ecografia abdominal com alterações no hipocondrico esquerdo. Pára á toma de bupremorfina e faz lavagem de estômago e internamento hospitalar para estabilizar.");
         // J
         db.addNewEntry("André Maria","Hospital São José","Dores no hipocondrico direito. Toma metadona e bupremorfina.");
+        */
 
         /* PARTICIPANTE 4
         // A
@@ -175,7 +176,7 @@ public class EnterDataActivity extends AppCompatActivity {
         db.addNewEntry("Pedro Fernandes Domingues","Centro de Saúde de Ermesinde","Joanetes inchados. Aplicar Bepanthene com movimentos circulares de manhã e à noite.");
         */
 
-        /* PARTICIPANTE 5
+        /* PARTICIPANTE 5 */
         // A
         db.addNewEntry("Pedro Silva","Hospital de Dia da Maia","Foi diagnosticada uma possível micro-rotura na face anterior da coxa esquerda. Foi pedida uma ecografia e receitado o anti-inflamatório Voltaren.");
         // B
@@ -196,7 +197,7 @@ public class EnterDataActivity extends AppCompatActivity {
         db.addNewEntry("Fábio Costa","Hospital de Dia da Maia","O paciente apresentava dores no maxilar após uma endoscopia tenso sido receitado Brufen.");
         // J
         db.addNewEntry("Carlos Fernandes","Hospital de S. João","O paciente apresentava uma fratura no pulso. Foi receitado Feldene.");
-        */
+
 
         /* Fake data
         while (i <= 10) {
