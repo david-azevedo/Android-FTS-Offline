@@ -131,7 +131,7 @@ public class DatabaseTable {
         * columns of the virtual table.
         * */
         String[] selectionArgs = new String[1];
-        String[] terms = query.trim().split(" ");
+        String[] terms = query.trim().split("[ -]");
 
         // Setting the new search terms in the tfidf helper
         TfIdfHelper.setSearchTerms(terms);

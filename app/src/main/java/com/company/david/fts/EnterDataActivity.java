@@ -81,12 +81,61 @@ public class EnterDataActivity extends AppCompatActivity {
     private void addInfo () {
 
         int i = 0;
+        DatabaseTable db = DatabaseTable.getInstance(getBaseContext());
+        // DOCTOR | HOSPITAL | TRANSCRIPT
+
+        /* PARTICIPANTE 1
+        // A
+        db.addNewEntry("Dr. João", "Hospital de São João", "Consulta de medicina geral devido a uma dor de garganta. Foi receitado brufen.");
+        // B
+        db.addNewEntry("Dra. Marta","Hospital de São João","Consulta de medicina geral por crise de alergia. Foi receitado brufen e anti-alérgico.");
+        // C
+        db.addNewEntry("Dr. João","Hospital da Maia","Consulta de medicina dentária devido a dor de dentes.");
+        // D
+        db.addNewEntry("Dra. Ana","Hospital da Maia","Consulta de pediatria.");
+        // E
+        db.addNewEntry("Dra. Marta","Hospital da Trofa","Consulta de medicina geral devido a constipação e febre. Foi receitado brufen e benuron.");
+        // F
+        db.addNewEntry("Dr. Joao","Hospital da Trofa","consulta de medicina dentária. Foi arrancado um dente.");
+        // G
+        db.addNewEntry("Dr. Pedro","Hospital de São João","consulta de dermatologia. Irritação na pela e vermelhidão.");
+        // H
+        db.addNewEntry("Dr. Neto","Hospital de São João","consulta de dermatologia.");
+        // I
+        db.addNewEntry("Dra. Sara","Hospital da Trofa","Consulta de ortopedia devido a dor no joelho. Aconselhada cirurgia.");
+        // J
+        db.addNewEntry("Dra. Sara","Hospital da Trofa","consulta de ortopedia. Receitado analgésico.");
+        */
+
+        /* PARTICIPANTE 2
+        // A
+        db.addNewEntry();
+        // B
+        db.addNewEntry();
+        // C
+        db.addNewEntry();
+        // D
+        db.addNewEntry();
+        // E
+        db.addNewEntry();
+        // F
+        db.addNewEntry();
+        // G
+        db.addNewEntry();
+        // H
+        db.addNewEntry();
+        // I
+        db.addNewEntry();
+        // J
+        db.addNewEntry();
+        */
+
+        /* Fake data */
         while (i <= 10) {
             String[] temp = AppointmentUtils.getFakeData();
             DatabaseTable.getInstance(getBaseContext()).addNewEntry(temp[0], temp[1], temp[2]);
             i++;
         }
-
     }
 
     // Function to store data and show a Toast (run in the different thread)
