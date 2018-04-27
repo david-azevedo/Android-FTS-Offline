@@ -87,17 +87,12 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (mSwitch.isChecked()) {
-                    showToast("It is ON");
-                } else {
-                    showToast("It is OFF");
-                }
-
                 String query = mSearchData.getText().toString().trim();
 
                 if (query.equals("") || query.equals(mQuery))
                     return;
 
+                query = query.replace(".","");
                 mQuery = query;
                 if(mAsyncTask != null) {
                     mAsyncTask.cancel(true);

@@ -131,7 +131,9 @@ public class DatabaseTable {
         * columns of the virtual table.
         * */
         String[] selectionArgs = new String[1];
-        String[] terms = query.trim().split("[ -]");
+        String[] terms = query.trim().split("[ -+]");
+
+        Log.d("TERMS FOR SEARCH", Arrays.toString(terms));
 
         // Setting the new search terms in the tfidf helper
         TfIdfHelper.setSearchTerms(terms);
@@ -152,6 +154,7 @@ public class DatabaseTable {
             selectionArgs[0] = query + "*";
         }
 
+        Log.d("SELECTION ARGS", Arrays.toString(selectionArgs));
         String selection = FTS_VIRTUAL_TABLE + " MATCH ?";
 
         return query(selection, selectionArgs, columns);
