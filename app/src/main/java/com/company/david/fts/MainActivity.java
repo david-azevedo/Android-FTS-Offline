@@ -3,25 +3,27 @@ package com.company.david.fts;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.company.david.fts.Data.DatabaseTable;
 
-public class MainActivity extends AppCompatActivity {
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
-    private Button mButtonEnterData;
-    private Button mButtonSearchData;
-    private Button mButtonViewData;
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mButtonEnterData = findViewById(R.id.bt_enter_data);
-        mButtonSearchData = findViewById(R.id.bt_search_data);
-        mButtonViewData = findViewById(R.id.bt_view_data);
+        Button mButtonEnterData = findViewById(R.id.bt_enter_data);
+        Button mButtonSearchData = findViewById(R.id.bt_search_data);
+        Button mButtonViewData = findViewById(R.id.bt_view_data);
 
         mButtonEnterData.setOnClickListener(new View.OnClickListener() {
             @Override
