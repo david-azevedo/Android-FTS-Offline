@@ -13,6 +13,8 @@ import com.company.david.fts.Utils.TfIdfHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class DatabaseTable {
 
@@ -115,6 +117,22 @@ public class DatabaseTable {
             if (mDatabase == null) {
                 Log.w("DATABASE", "Database is null!");
             }
+
+            // TODO Criar nova coluna na db para a data atual
+            // Getting the current data to add in a new column
+            Calendar c = Calendar.getInstance();
+            int day = c.get(Calendar.DAY_OF_MONTH);
+            String month = c.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
+            int year = c.get(Calendar.YEAR);
+            String day_of_week = c.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
+
+            // String representing the current day, month, year and week day
+            String to_preppend = "d:" + String.format("%02d", day) + " m:" + month + " y:" + year + " w:" + day_of_week;
+
+            // TODO apagar
+            Log.d("CURRENT DATE", to_preppend);
+
+            // TODO Adicionar a nova coluna e adicionar a entrada
             ContentValues cv = new ContentValues();
             cv.put(COL_DOCTOR, doctor);
             cv.put(COL_HOSPITAL, hospital);
@@ -130,6 +148,12 @@ public class DatabaseTable {
         * By using the table name in the match clause we are searching all
         * columns of the virtual table.
         * */
+
+        // TODO identificar aqui as datas e trabalhar com elas
+
+        // Identificação da lingua em que o dispositivo esta
+        Locale.getDefault().getDisplayLanguage();
+
         String[] selectionArgs = new String[1];
         String[] terms = query.trim().split("[- +]");
 
