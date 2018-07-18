@@ -30,6 +30,7 @@ public class DatabaseTable {
     public static final String COL_DOCTOR = "DOCTOR";
     public static final String COL_HOSPITAL = "HOSPITAL";
     public static final String COL_TRANSCRIPT = "TRANSCRIPT";
+    public static final String COL_DATE = "DATE";
     public static final String COL_TOKENIZE = "tokenize=unicode61";
     public static final String COL_MATCHINFO = "MATCHINFO";
     public static final String COL_SNIPPET = "SNIPPET";
@@ -86,6 +87,7 @@ public class DatabaseTable {
                         " USING fts3 (" +
                         COL_DOCTOR + ", " +
                         COL_HOSPITAL + ", " +
+                        COL_DATE + ", " +
                         COL_TRANSCRIPT + ", " +
                         COL_TOKENIZE + ")";
 
@@ -118,7 +120,6 @@ public class DatabaseTable {
                 Log.w("DATABASE", "Database is null!");
             }
 
-            // TODO Criar nova coluna na db para a data atual
             // Getting the current data to add in a new column
             Calendar c = Calendar.getInstance();
             int day = c.get(Calendar.DAY_OF_MONTH);
@@ -127,15 +128,14 @@ public class DatabaseTable {
             String day_of_week = c.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
 
             // String representing the current day, month, year and week day
-            String to_preppend = "d:" + String.format("%02d", day) + " m:" + month + " y:" + year + " w:" + day_of_week;
+            String date = "d:" + String.format("%02d", day) + " m:" + month + " y:" + year + " w:" + day_of_week;
 
-            // TODO apagar
-            Log.d("CURRENT DATE", to_preppend);
+            Log.d("CURRENT DATE", date);
 
-            // TODO Adicionar a nova coluna e adicionar a entrada
             ContentValues cv = new ContentValues();
             cv.put(COL_DOCTOR, doctor);
             cv.put(COL_HOSPITAL, hospital);
+            cv.put(COL_DATE, date);
             cv.put(COL_TRANSCRIPT, transcript);
 
             return mDatabase.insert(FTS_VIRTUAL_TABLE, null, cv);
@@ -151,8 +151,20 @@ public class DatabaseTable {
 
         // TODO identificar aqui as datas e trabalhar com elas
 
+        String day = null;
+        String month = null;
+        String year = null;
+        String day_of_week = null;
+
+        // TODO usar primeiro datas dd/mm/yy porque são independetes da lingua
+        //(0?[1-9]|[12][0-9]|3[01])[- \/.](0?[1-9]|1[012])(?:[- \/.]((?:19|20)?\d\d))?
+
         // Identificação da lingua em que o dispositivo esta
-        Locale.getDefault().getDisplayLanguage();
+        if (Locale.getDefault().getLanguage().equals(new Locale("pt").getLanguage())) {// Português
+
+        } else { // Inglês
+
+        }
 
         String[] selectionArgs = new String[1];
         String[] terms = query.trim().split("[- +]");
