@@ -9,12 +9,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
 
+import com.company.david.fts.Utils.Date;
 import com.company.david.fts.Utils.TfIdfHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.regex.Matcher;
 
 public class DatabaseTable {
 
@@ -156,8 +158,40 @@ public class DatabaseTable {
         String year = null;
         String day_of_week = null;
 
-        // TODO usar primeiro datas dd/mm/yy porque são independetes da lingua
-        //(0?[1-9]|[12][0-9]|3[01])[- \/.](0?[1-9]|1[012])(?:[- \/.]((?:19|20)?\d\d))?
+        // Matching DD/MM/(YY)YY
+        Matcher m = Date.DATE_DD_MM_YYYY_PATTERN.matcher(query);
+        if (m.matches()) {
+            day = m.group(1);
+            month = Date.MONTH_INTEGER_TO_CALENDAR.get(Integer.parseInt(m.group(2))) + "";
+            if(m.group(3) != null) {
+                year = m.group(3);
+                if (year.length() == 2)
+                    year = "20" + year;
+            }
+        }
+
+        // Matching MM/DD/(YY)YY
+        m = Date.DATE_MM_DD_YYYY_PATTERN.matcher(query);
+        if (m.matches()) {
+            month = Date.MONTH_INTEGER_TO_CALENDAR.get(Integer.parseInt(m.group(1))) + "";
+            day = m.group(2);
+            if(m.group(3) != null) {
+                year = m.group(3);
+                if (year.length() == 2)
+                    year = "20" + year;
+            }
+        }
+
+        // Matching YYYY/MM/DD
+        m = Date.DATE_YYYY_MM_DD_PATTERN.matcher(query);
+        if(m.matches()) {
+            year = m.group(1);
+            if (year.length() == 2)
+                year = "20" + year;
+            month = Date.MONTH_INTEGER_TO_CALENDAR.get(Integer.parseInt(m.group(2))) + "";
+            day = m.group(3);
+
+        }
 
         // Identificação da lingua em que o dispositivo esta
         if (Locale.getDefault().getLanguage().equals(new Locale("pt").getLanguage())) {// Português
