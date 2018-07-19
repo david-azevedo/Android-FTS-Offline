@@ -122,6 +122,10 @@ public class Date {
         // Identificação da lingua em que o dispositivo esta
         if (Locale.getDefault().getLanguage().equals(new Locale("pt").getLanguage())) {// Português
 
+            m = Date.DATE_IN_FULL_PT_PATTERN.matcher(query);
+            if (m.matches()) {
+                
+            }
         } else { // Inglês
 
         }
