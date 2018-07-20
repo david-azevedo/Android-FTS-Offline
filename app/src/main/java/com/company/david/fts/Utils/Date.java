@@ -23,11 +23,12 @@ public class Date {
 
     public static final Pattern WEEK_DAY_PATTERN = Pattern.compile("(?i)mon|tue|wed|thur|fri|sat|sun|segunda|ter[cç]a|quarta|quinta|sexta|s[aá]bado|domingo");
     public static final Pattern DATE_IN_FULL_EN_PATTERN = Pattern.compile("(?i)((?!00)[0-2][0-9]|[1-9]|30|31)(?:st|nd|rd|th)?(?: ?of ?| *)?(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec)(?: *(?:,|of)? *)?((?:19|20)?\\d\\d)?");
-    public static final Pattern DATE_IN_FULL_MONTH_FIRST_EN_PATTERN = Pattern.compile("(?i)(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec)(?: *(?:,|the)? *)?((?!00)[0-2][0-9]|[1-9]|30|31)?(?:st|nd|rd|th)?(?: *(?:,|of)? *)?((?:19|20)?\\d\\d)?");
-    public static final Pattern DATE_IN_FULL_PT_PATTERN = Pattern.compile("((?!00)[0-2][0-9]|[1-9]|30|31)?(?i)(?: ?de ?| *)?(janeiro|fevereiro|março|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro|jan|feb|mar|abr|jun|jul|ago|set|out|nov|dez)(?: ?de ?| *)?((?:19|20)?\\d\\d)?");
+    public static final Pattern DATE_IN_FULL_MONTH_FIRST_EN_PATTERN = Pattern.compile("(?i)(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec)(?: *(?:,|the)? *)?((?!00)[0-2][0-9]|[1-9]|30|31)?(?:st|nd|rd|th)?(?: *(?:,|of)? *)((?:19|20)?\\d\\d)?");
+    public static final Pattern DATE_IN_FULL_PT_PATTERN = Pattern.compile("((?!00)[0-2][0-9]|[1-9]|30|31)?(?i)(?: ?de ?| *)?(janeiro|fevereiro|mar[çc]o|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro|jan|fev|mar|abr|mai|jun|jul|ago|set|out|nov|dez)(?: ?de ?| *)?((?:19|20)?\\d\\d)?");
 
     public static SparseIntArray MONTH_INTEGER_TO_CALENDAR;
     public static HashMap<String, Integer> WEEK_DAY_TO_CALENDAR;
+    public static HashMap<String, Integer> MONTH_TO_CALENDAR;
 
     static
     {
@@ -65,6 +66,54 @@ public class Date {
         WEEK_DAY_TO_CALENDAR.put("sabado", Calendar.SATURDAY);
         WEEK_DAY_TO_CALENDAR.put("sábado", Calendar.SATURDAY);
         WEEK_DAY_TO_CALENDAR.put("domingo", Calendar.SUNDAY);
+
+        // Adding month string values English and Portuguese
+        // janeiro|fevereiro|mar[çc]o|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro|jan|fev|mar|abr|mai|jun|jul|ago|set|out|nov|dez
+        MONTH_TO_CALENDAR = new HashMap<String, Integer>();
+        MONTH_TO_CALENDAR.put("janeiro",Calendar.JANUARY);
+        MONTH_TO_CALENDAR.put("fevereiro",Calendar.FEBRUARY);
+        MONTH_TO_CALENDAR.put("marco",Calendar.MARCH);
+        MONTH_TO_CALENDAR.put("março",Calendar.MARCH);
+        MONTH_TO_CALENDAR.put("abril",Calendar.APRIL);
+        MONTH_TO_CALENDAR.put("maio",Calendar.MAY);
+        MONTH_TO_CALENDAR.put("junho",Calendar.JUNE);
+        MONTH_TO_CALENDAR.put("julho",Calendar.JULY);
+        MONTH_TO_CALENDAR.put("agosto",Calendar.AUGUST);
+        MONTH_TO_CALENDAR.put("setembro",Calendar.SEPTEMBER);
+        MONTH_TO_CALENDAR.put("outubro",Calendar.OCTOBER);
+        MONTH_TO_CALENDAR.put("novembro",Calendar.NOVEMBER);
+        MONTH_TO_CALENDAR.put("dezembro",Calendar.DECEMBER);
+        MONTH_TO_CALENDAR.put("jan",Calendar.JANUARY);
+        MONTH_TO_CALENDAR.put("fev",Calendar.FEBRUARY);
+        MONTH_TO_CALENDAR.put("mar",Calendar.MARCH);
+        MONTH_TO_CALENDAR.put("abr",Calendar.APRIL);
+        MONTH_TO_CALENDAR.put("mai",Calendar.MAY);
+        MONTH_TO_CALENDAR.put("jun",Calendar.JUNE);
+        MONTH_TO_CALENDAR.put("jul",Calendar.JULY);
+        MONTH_TO_CALENDAR.put("ago",Calendar.AUGUST);
+        MONTH_TO_CALENDAR.put("set",Calendar.SEPTEMBER);
+        MONTH_TO_CALENDAR.put("out",Calendar.OCTOBER);
+        MONTH_TO_CALENDAR.put("nov",Calendar.NOVEMBER);
+        MONTH_TO_CALENDAR.put("dez",Calendar.DECEMBER);
+        MONTH_TO_CALENDAR.put("january",Calendar.JANUARY);
+        MONTH_TO_CALENDAR.put("february",Calendar.FEBRUARY);
+        MONTH_TO_CALENDAR.put("march",Calendar.MARCH);
+        MONTH_TO_CALENDAR.put("april",Calendar.APRIL);
+        MONTH_TO_CALENDAR.put("may",Calendar.MAY);
+        MONTH_TO_CALENDAR.put("june",Calendar.JUNE);
+        MONTH_TO_CALENDAR.put("july",Calendar.JULY);
+        MONTH_TO_CALENDAR.put("august",Calendar.AUGUST);
+        MONTH_TO_CALENDAR.put("september",Calendar.SEPTEMBER);
+        MONTH_TO_CALENDAR.put("october",Calendar.OCTOBER);
+        MONTH_TO_CALENDAR.put("november",Calendar.NOVEMBER);
+        MONTH_TO_CALENDAR.put("december",Calendar.DECEMBER);
+        MONTH_TO_CALENDAR.put("feb",Calendar.FEBRUARY);
+        MONTH_TO_CALENDAR.put("apr",Calendar.APRIL);
+        MONTH_TO_CALENDAR.put("aug",Calendar.AUGUST);
+        MONTH_TO_CALENDAR.put("sep",Calendar.SEPTEMBER);
+        MONTH_TO_CALENDAR.put("sept",Calendar.SEPTEMBER);
+        MONTH_TO_CALENDAR.put("oct",Calendar.OCTOBER);
+        MONTH_TO_CALENDAR.put("dec",Calendar.DECEMBER);
     }
 
     public static DateMatch detectDates(String query) {
@@ -74,16 +123,16 @@ public class Date {
 
         // TODO problema de ser bastante abrangente (sat -> saturado, mon -> monte, etc.)
         // Detecting day of week
-        Matcher m = Date.WEEK_DAY_PATTERN.matcher(query);
+        Matcher m = WEEK_DAY_PATTERN.matcher(query);
         if (m.matches()) {
-            result.day_of_week = Date.WEEK_DAY_TO_CALENDAR.get(m.group()) + "";
+            result.day_of_week = WEEK_DAY_TO_CALENDAR.get(m.group().toLowerCase()) + "";
         }
 
         // Matching DD/MM/(YY)YY
-        m = Date.DATE_DD_MM_YYYY_PATTERN.matcher(query);
+        m = DATE_DD_MM_YYYY_PATTERN.matcher(query);
         if (m.matches()) {
             result.day = m.group(1);
-            result.month = Date.MONTH_INTEGER_TO_CALENDAR.get(Integer.parseInt(m.group(2))) + "";
+            result.month = MONTH_INTEGER_TO_CALENDAR.get(Integer.parseInt(m.group(2)));
             if(m.group(3) != null) {
                 result.year = m.group(3);
                 if (result.year.length() == 2)
@@ -94,9 +143,9 @@ public class Date {
         }
 
         // Matching MM/DD/(YY)YY
-        m = Date.DATE_MM_DD_YYYY_PATTERN.matcher(query);
+        m = DATE_MM_DD_YYYY_PATTERN.matcher(query);
         if (m.matches()) {
-            result.month = Date.MONTH_INTEGER_TO_CALENDAR.get(Integer.parseInt(m.group(1))) + "";
+            result.month = MONTH_INTEGER_TO_CALENDAR.get(Integer.parseInt(m.group(1)));
             result.day = m.group(2);
             if(m.group(3) != null) {
                 result.year = m.group(3);
@@ -108,12 +157,12 @@ public class Date {
         }
 
         // Matching YYYY/MM/DD
-        m = Date.DATE_YYYY_MM_DD_PATTERN.matcher(query);
+        m = DATE_YYYY_MM_DD_PATTERN.matcher(query);
         if(m.matches()) {
             result.year = m.group(1);
             if (result.year.length() == 2)
                 result.year = "20" + result.year;
-            result.month = Date.MONTH_INTEGER_TO_CALENDAR.get(Integer.parseInt(m.group(2))) + "";
+            result.month = MONTH_INTEGER_TO_CALENDAR.get(Integer.parseInt(m.group(2)));
             result.day = m.group(3);
 
             return result;
@@ -122,11 +171,41 @@ public class Date {
         // Identificação da lingua em que o dispositivo esta
         if (Locale.getDefault().getLanguage().equals(new Locale("pt").getLanguage())) {// Português
 
-            m = Date.DATE_IN_FULL_PT_PATTERN.matcher(query);
+            m = DATE_IN_FULL_PT_PATTERN.matcher(query);
             if (m.matches()) {
-                
+                result.day = m.group(1);
+                result.month = MONTH_TO_CALENDAR.get(m.group(2).toLowerCase());
+                result.year = m.group(3);
+                if (result.year.length() == 2)
+                    result.year = "20" + result.year;
+
+                return result;
+
             }
         } else { // Inglês
+
+            m = DATE_IN_FULL_EN_PATTERN.matcher(query);
+            if (m.matches()) {
+                result.day = m.group(1);
+                result.month = MONTH_TO_CALENDAR.get(m.group(2).toLowerCase());
+                result.year = m.group(3);
+                if (result.year.length() == 2)
+                    result.year = "20" + result.year;
+
+                return result;
+
+            }
+
+            m = DATE_IN_FULL_MONTH_FIRST_EN_PATTERN.matcher(query);
+            if (m.matches()) {
+                result.day = m.group(2);
+                result.month = MONTH_TO_CALENDAR.get(m.group(1).toLowerCase());
+                result.year = m.group(3);
+                if (result.year.length() == 2)
+                    result.year = "20" + result.year;
+
+                return result;
+            }
 
         }
 
