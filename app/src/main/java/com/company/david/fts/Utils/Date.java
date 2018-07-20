@@ -13,23 +13,22 @@ import java.util.regex.Pattern;
 */
 public class Date {
 
-    public static final Pattern DATE_DD_MM_YYYY_PATTERN = Pattern.compile("(0?[1-9]|[12][0-9]|3[01])[- \\/.](0?[1-9]|1[012])(?:[- \\/.]((?:19|20)?\\d\\d))?");
-    public static final Pattern DATE_MM_DD_YYYY_PATTERN = Pattern.compile("(0?[1-9]|1[012])[- \\/.](0?[1-9]|[12][0-9]|3[01])(?:[- \\/.]((?:19|20)?\\d\\d))?");
-    public static final Pattern DATE_YYYY_MM_DD_PATTERN = Pattern.compile("((?:19|20)?\\d\\d)[- \\/.](0?[1-9]|1[012])[- \\/.](0?[1-9]|[12][0-9]|3[01])");
+    private static final Pattern DATE_DD_MM_YYYY_PATTERN = Pattern.compile("(0?[1-9]|[12][0-9]|3[01])[- \\/.](0?[1-9]|1[012])(?:[- \\/.]((?:19|20)?\\d\\d))?");
+    private static final Pattern DATE_MM_DD_YYYY_PATTERN = Pattern.compile("(0?[1-9]|1[012])[- \\/.](0?[1-9]|[12][0-9]|3[01])(?:[- \\/.]((?:19|20)?\\d\\d))?");
+    private static final Pattern DATE_YYYY_MM_DD_PATTERN = Pattern.compile("((?:19|20)?\\d\\d)[- \\/.](0?[1-9]|1[012])[- \\/.](0?[1-9]|[12][0-9]|3[01])");
 
-    // TODO Expandir meses e dias da semana para as opções todas e procurar apenas quando as palavras estão isoladas
     // TODO ver se vale a pena ou não introduzir horas
     //public static final Pattern HOURS_PATTERN = Pattern.compile("([0-9]|0[0-9]|1[0-9]|2[0-3])(?::|h)([0-5][0-9]|[1-9])? *(?i)(A.?M.?|P.?M.?)?");
     //public static final Pattern HOURS_IN_FULL_PATTERN = Pattern.compile("(?!00)(\\d\\d)( ?h| ?o'clock)");
 
-    public static final Pattern WEEK_DAY_PATTERN = Pattern.compile("\\b(?i)(?:mon|tue|wed|thur|fri|sat|sun|monday|tuesday|wednesday|thursday|friday|saturday|sunday|segunda|ter[cç]a|quarta|quinta|sexta|s[aá]bado|domingo|seg|ter|qua|qui|sex|s[aá]b)\\b");
-    public static final Pattern DATE_IN_FULL_EN_PATTERN = Pattern.compile("(?i)((?!00)[0-2][0-9]|[1-9]|30|31)(?:st|nd|rd|th)?(?: ?of ?| *)?(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec)(?: *(?:,|of)? *)?((?:19|20)?\\d\\d)?");
-    public static final Pattern DATE_IN_FULL_MONTH_FIRST_EN_PATTERN = Pattern.compile("(?i)(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec)(?: *(?:,|the)? *)?((?!00)[0-2][0-9]|[1-9]|30|31)?(?:st|nd|rd|th)?(?: *(?:,|of)? *)((?:19|20)?\\d\\d)?");
-    public static final Pattern DATE_IN_FULL_PT_PATTERN = Pattern.compile("((?!00)[0-2][0-9]|[1-9]|30|31)?(?i)(?: ?de ?| *)?(janeiro|fevereiro|mar[çc]o|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro|jan|fev|mar|abr|mai|jun|jul|ago|set|out|nov|dez)(?: ?de ?| *)?((?:19|20)?\\d\\d)?");
+    private static final Pattern WEEK_DAY_PATTERN = Pattern.compile("\\b(?i)(?:mon|tue|wed|thur|fri|sat|sun|monday|tuesday|wednesday|thursday|friday|saturday|sunday|segunda|ter[cç]a|quarta|quinta|sexta|s[aá]bado|domingo|seg|ter|qua|qui|sex|s[aá]b)\\b");
+    private static final Pattern DATE_IN_FULL_EN_PATTERN = Pattern.compile("(?i)((?!00)[0-2][0-9]|[1-9]|30|31)(?:st|nd|rd|th)?(?: ?of ?| *)?(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec)(?: *(?:,|of)? *)?((?:19|20)?\\d\\d)?");
+    private static final Pattern DATE_IN_FULL_MONTH_FIRST_EN_PATTERN = Pattern.compile("(?i)(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec)(?: *(?:,|the)? *)?((?!00)[0-2][0-9]|[1-9]|30|31)?(?:st|nd|rd|th)?(?: *(?:,|of)? *)((?:19|20)?\\d\\d)?");
+    private static final Pattern DATE_IN_FULL_PT_PATTERN = Pattern.compile("((?!00)[0-2][0-9]|[1-9]|30|31)?(?i)(?: ?de ?| *)?(janeiro|fevereiro|mar[çc]o|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro|jan|fev|mar|abr|mai|jun|jul|ago|set|out|nov|dez)(?: ?de ?| *)?((?:19|20)?\\d\\d)?");
 
-    public static SparseIntArray MONTH_INTEGER_TO_CALENDAR;
-    public static HashMap<String, Integer> WEEK_DAY_TO_CALENDAR;
-    public static HashMap<String, Integer> MONTH_TO_CALENDAR;
+    private static SparseIntArray MONTH_INTEGER_TO_CALENDAR;
+    private static HashMap<String, Integer> WEEK_DAY_TO_CALENDAR;
+    private static HashMap<String, Integer> MONTH_TO_CALENDAR;
 
     static
     {
@@ -50,7 +49,7 @@ public class Date {
 
         // Adding week day values
         // mon|tue|wed|thur|fri|sat|sun|segunda|ter[cç]a|quarta|quinta|sexta|s[aá]bado|domingo
-        WEEK_DAY_TO_CALENDAR = new HashMap<String, Integer>();
+        WEEK_DAY_TO_CALENDAR = new HashMap<>();
         WEEK_DAY_TO_CALENDAR.put("mon", Calendar.MONDAY);
         WEEK_DAY_TO_CALENDAR.put("tue", Calendar.TUESDAY);
         WEEK_DAY_TO_CALENDAR.put("wed", Calendar.WEDNESDAY);
@@ -85,7 +84,7 @@ public class Date {
 
         // Adding month string values English and Portuguese
         // janeiro|fevereiro|mar[çc]o|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro|jan|fev|mar|abr|mai|jun|jul|ago|set|out|nov|dez
-        MONTH_TO_CALENDAR = new HashMap<String, Integer>();
+        MONTH_TO_CALENDAR = new HashMap<>();
         MONTH_TO_CALENDAR.put("janeiro",Calendar.JANUARY);
         MONTH_TO_CALENDAR.put("fevereiro",Calendar.FEBRUARY);
         MONTH_TO_CALENDAR.put("marco",Calendar.MARCH);
