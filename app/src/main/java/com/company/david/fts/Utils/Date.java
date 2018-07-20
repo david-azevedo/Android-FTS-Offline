@@ -17,11 +17,12 @@ public class Date {
     public static final Pattern DATE_MM_DD_YYYY_PATTERN = Pattern.compile("(0?[1-9]|1[012])[- \\/.](0?[1-9]|[12][0-9]|3[01])(?:[- \\/.]((?:19|20)?\\d\\d))?");
     public static final Pattern DATE_YYYY_MM_DD_PATTERN = Pattern.compile("((?:19|20)?\\d\\d)[- \\/.](0?[1-9]|1[012])[- \\/.](0?[1-9]|[12][0-9]|3[01])");
 
+    // TODO Expandir meses e dias da semana para as opções todas e procurar apenas quando as palavras estão isoladas
     // TODO ver se vale a pena ou não introduzir horas
     //public static final Pattern HOURS_PATTERN = Pattern.compile("([0-9]|0[0-9]|1[0-9]|2[0-3])(?::|h)([0-5][0-9]|[1-9])? *(?i)(A.?M.?|P.?M.?)?");
     //public static final Pattern HOURS_IN_FULL_PATTERN = Pattern.compile("(?!00)(\\d\\d)( ?h| ?o'clock)");
 
-    public static final Pattern WEEK_DAY_PATTERN = Pattern.compile("(?i)mon|tue|wed|thur|fri|sat|sun|segunda|ter[cç]a|quarta|quinta|sexta|s[aá]bado|domingo");
+    public static final Pattern WEEK_DAY_PATTERN = Pattern.compile("\\b(?i)(?:mon|tue|wed|thur|fri|sat|sun|monday|tuesday|wednesday|thursday|friday|saturday|sunday|segunda|ter[cç]a|quarta|quinta|sexta|s[aá]bado|domingo|seg|ter|qua|qui|sex|s[aá]b)\\b");
     public static final Pattern DATE_IN_FULL_EN_PATTERN = Pattern.compile("(?i)((?!00)[0-2][0-9]|[1-9]|30|31)(?:st|nd|rd|th)?(?: ?of ?| *)?(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec)(?: *(?:,|of)? *)?((?:19|20)?\\d\\d)?");
     public static final Pattern DATE_IN_FULL_MONTH_FIRST_EN_PATTERN = Pattern.compile("(?i)(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec)(?: *(?:,|the)? *)?((?!00)[0-2][0-9]|[1-9]|30|31)?(?:st|nd|rd|th)?(?: *(?:,|of)? *)((?:19|20)?\\d\\d)?");
     public static final Pattern DATE_IN_FULL_PT_PATTERN = Pattern.compile("((?!00)[0-2][0-9]|[1-9]|30|31)?(?i)(?: ?de ?| *)?(janeiro|fevereiro|mar[çc]o|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro|jan|fev|mar|abr|mai|jun|jul|ago|set|out|nov|dez)(?: ?de ?| *)?((?:19|20)?\\d\\d)?");
@@ -57,6 +58,13 @@ public class Date {
         WEEK_DAY_TO_CALENDAR.put("fri", Calendar.FRIDAY);
         WEEK_DAY_TO_CALENDAR.put("sat", Calendar.SATURDAY);
         WEEK_DAY_TO_CALENDAR.put("sun", Calendar.SUNDAY);
+        WEEK_DAY_TO_CALENDAR.put("monday", Calendar.MONDAY);
+        WEEK_DAY_TO_CALENDAR.put("tuesday", Calendar.TUESDAY);
+        WEEK_DAY_TO_CALENDAR.put("wednesday", Calendar.WEDNESDAY);
+        WEEK_DAY_TO_CALENDAR.put("thursday", Calendar.THURSDAY);
+        WEEK_DAY_TO_CALENDAR.put("friday", Calendar.FRIDAY);
+        WEEK_DAY_TO_CALENDAR.put("saturday", Calendar.SATURDAY);
+        WEEK_DAY_TO_CALENDAR.put("sunday", Calendar.SUNDAY);
         WEEK_DAY_TO_CALENDAR.put("segunda", Calendar.MONDAY);
         WEEK_DAY_TO_CALENDAR.put("terca", Calendar.TUESDAY);
         WEEK_DAY_TO_CALENDAR.put("terça", Calendar.TUESDAY);
@@ -66,6 +74,14 @@ public class Date {
         WEEK_DAY_TO_CALENDAR.put("sabado", Calendar.SATURDAY);
         WEEK_DAY_TO_CALENDAR.put("sábado", Calendar.SATURDAY);
         WEEK_DAY_TO_CALENDAR.put("domingo", Calendar.SUNDAY);
+        WEEK_DAY_TO_CALENDAR.put("seg", Calendar.MONDAY);
+        WEEK_DAY_TO_CALENDAR.put("ter", Calendar.TUESDAY);
+        WEEK_DAY_TO_CALENDAR.put("qua", Calendar.WEDNESDAY);
+        WEEK_DAY_TO_CALENDAR.put("qui", Calendar.THURSDAY);
+        WEEK_DAY_TO_CALENDAR.put("sex", Calendar.FRIDAY);
+        WEEK_DAY_TO_CALENDAR.put("sab", Calendar.SATURDAY);
+        WEEK_DAY_TO_CALENDAR.put("sáb", Calendar.SATURDAY);
+        WEEK_DAY_TO_CALENDAR.put("dom", Calendar.SUNDAY);
 
         // Adding month string values English and Portuguese
         // janeiro|fevereiro|mar[çc]o|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro|jan|fev|mar|abr|mai|jun|jul|ago|set|out|nov|dez
@@ -119,13 +135,11 @@ public class Date {
     public static DateMatch detectDates(String query) {
         DateMatch result = new DateMatch();
 
-        // TODO identificar aqui as datas e trabalhar com elas
-
         // TODO problema de ser bastante abrangente (sat -> saturado, mon -> monte, etc.)
         // Detecting day of week
         Matcher m = WEEK_DAY_PATTERN.matcher(query);
         if (m.matches()) {
-            result.day_of_week = WEEK_DAY_TO_CALENDAR.get(m.group().toLowerCase()) + "";
+            result.day_of_week = WEEK_DAY_TO_CALENDAR.get(m.group().toLowerCase());
         }
 
         // Matching DD/MM/(YY)YY
@@ -168,7 +182,7 @@ public class Date {
             return result;
         }
 
-        // Identificação da lingua em que o dispositivo esta
+        // Identificação da lingua em que o dispositivo está
         if (Locale.getDefault().getLanguage().equals(new Locale("pt").getLanguage())) {// Português
 
             m = DATE_IN_FULL_PT_PATTERN.matcher(query);
@@ -180,8 +194,8 @@ public class Date {
                     result.year = "20" + result.year;
 
                 return result;
-
             }
+
         } else { // Inglês
 
             m = DATE_IN_FULL_EN_PATTERN.matcher(query);
@@ -193,7 +207,6 @@ public class Date {
                     result.year = "20" + result.year;
 
                 return result;
-
             }
 
             m = DATE_IN_FULL_MONTH_FIRST_EN_PATTERN.matcher(query);
@@ -206,7 +219,6 @@ public class Date {
 
                 return result;
             }
-
         }
 
         return result;

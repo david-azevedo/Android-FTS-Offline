@@ -152,6 +152,25 @@ public class DatabaseTable {
 
         // Detecting dates
         DateMatch dMatch = Date.detectDates(query);
+        Calendar c = Calendar.getInstance();
+
+        //TODO construir a string das datas para adicionar na query
+        if (dMatch.day != null) {
+            query += " d:" + dMatch.day;
+        }
+        if (dMatch.month != -1) {
+            c.set(Calendar.MONTH, dMatch.month);
+            query += " m:" + c.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
+        }
+        if (dMatch.year != null) {
+            query += " y:" + dMatch.year;
+        }
+        if (dMatch.day_of_week != -1) {
+            c.set(Calendar.DAY_OF_WEEK, dMatch.day_of_week);
+            query += " w:" + c.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
+        }
+
+        Log.d("DATE MATCHER:", query);
 
         String[] selectionArgs = new String[1];
         String[] terms = query.trim().split("[- +]");

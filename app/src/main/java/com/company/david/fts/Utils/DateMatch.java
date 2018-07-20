@@ -6,6 +6,6 @@ public class DateMatch {
     public String day = null;
     public int month = -1;
     public String year = null;
-    public String day_of_week = null;
+    public int day_of_week = -1;
 
 }
