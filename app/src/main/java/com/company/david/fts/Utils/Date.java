@@ -134,7 +134,6 @@ public class Date {
     public static DateMatch detectDates(String query) {
         DateMatch result = new DateMatch();
 
-        // TODO problema de ser bastante abrangente (sat -> saturado, mon -> monte, etc.)
         // Detecting day of week
         Matcher m = WEEK_DAY_PATTERN.matcher(query);
         if (m.find()) {

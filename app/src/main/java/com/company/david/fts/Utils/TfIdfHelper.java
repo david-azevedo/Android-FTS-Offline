@@ -92,7 +92,10 @@ public class TfIdfHelper {
         // Getting the document frequency for each terms from the database
         for (int i = 0; i < searchTerms.length; i++) {
             documentFrequency[i] = DatabaseTable.getInstance(context).getDocumentFrequency(searchTerms[i]);
-            querySpaceVector[i] = Math.log(((double)totalDocs) / documentFrequency[i]);
+            if (documentFrequency[i] > 0)
+                querySpaceVector[i] = Math.log(((double)totalDocs) / documentFrequency[i]);
+            else
+                querySpaceVector[i] = 0;
         }
 
         // Iterating over each result (row);
@@ -107,7 +110,7 @@ public class TfIdfHelper {
             // Collapsing information from all columns to a single row
             int[] shortened = TfIdfHelper.shortenInitialArray(parsed);
             // Number of phrases in the query
-            int phrases = shortened[0];
+            int phrases = searchTerms.length;
             // Variable to accumulate all tfxIdf values for a given row
             double[] accumulator = new double[phrases];
 
@@ -118,7 +121,7 @@ public class TfIdfHelper {
                 int tf = shortened[(i * 3) + 2];
                 // Inverted document frequency
                 double idf = 0;
-                if (documentFrequency[i] != 0)
+                if (documentFrequency[i] > 0)
                     idf = Math.log(((double)totalDocs)/documentFrequency[i]);
                 // Tf x Idf value for 1 phrase
                 double result = tf * idf;
@@ -151,7 +154,9 @@ public class TfIdfHelper {
             double dotProduct = getDotProduct(queryVector, documentVectors.get(i));
             double docNorm = getVectorNorm(documentVectors.get(i));
 
-            double value = dotProduct / (queryNorm * docNorm);
+            double value = 0;
+            if ((queryNorm * docNorm) > 0)
+                value = dotProduct / (queryNorm * docNorm);
 
             result.add(value);
         }
