@@ -24,7 +24,7 @@ public class Date {
     private static final Pattern WEEK_DAY_PATTERN = Pattern.compile("\\b(?i)(?:mon|tue|wed|thur|fri|sat|sun|monday|tuesday|wednesday|thursday|friday|saturday|sunday|segunda|ter[cç]a|quarta|quinta|sexta|s[aá]bado|domingo|seg|ter|qua|qui|sex|s[aá]b)\\b");
     private static final Pattern DATE_IN_FULL_EN_PATTERN = Pattern.compile("(?i)((?!00)[0-2][0-9]|[1-9]|30|31)(?:st|nd|rd|th)?(?: ?of ?| *)?(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec)(?: *(?:,|of)? *)?((?:19|20)?\\d\\d)?");
     private static final Pattern DATE_IN_FULL_MONTH_FIRST_EN_PATTERN = Pattern.compile("(?i)(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec)(?: *(?:,|the)? *)?((?!00)[0-2][0-9]|[1-9]|30|31)?(?:st|nd|rd|th)?(?: *(?:,|of)? *)((?:19|20)?\\d\\d)?");
-    private static final Pattern DATE_IN_FULL_PT_PATTERN = Pattern.compile("((?!00)[0-2][0-9]|[1-9]|30|31)?(?i)(?: ?de ?| *)?(janeiro|fevereiro|mar[çc]o|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro|jan|fev|mar|abr|mai|jun|jul|ago|set|out|nov|dez)(?: ?de ?| *)?((?:19|20)?\\d\\d)?");
+    private static final Pattern DATE_IN_FULL_PT_PATTERN = Pattern.compile("((?!00)[0-2][0-9]|[1-9]|30|31)?(?i)(?: ?de ?| *)?\\b(janeiro|fevereiro|mar[çc]o|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro|jan|fev|mar|abr|mai|jun|jul|ago|set|out|nov|dez)\\b(?: ?de ?| *)?((?:19|20)?\\d\\d)?");
 
     private static SparseIntArray MONTH_INTEGER_TO_CALENDAR;
     private static HashMap<String, Integer> WEEK_DAY_TO_CALENDAR;
@@ -186,8 +186,9 @@ public class Date {
             result.day = m.group(1);
             result.month = MONTH_TO_CALENDAR.get(m.group(2).toLowerCase());
             result.year = m.group(3);
-            if (result.year.length() == 2)
-                result.year = "20" + result.year;
+            if (result.year != null)
+                if (result.year.length() == 2)
+                    result.year = "20" + result.year;
 
             return result;
         }
@@ -198,8 +199,9 @@ public class Date {
             result.day = m.group(1);
             result.month = MONTH_TO_CALENDAR.get(m.group(2).toLowerCase());
             result.year = m.group(3);
-            if (result.year.length() == 2)
-                result.year = "20" + result.year;
+            if (result.year != null)
+                if (result.year.length() == 2)
+                    result.year = "20" + result.year;
 
             return result;
         }

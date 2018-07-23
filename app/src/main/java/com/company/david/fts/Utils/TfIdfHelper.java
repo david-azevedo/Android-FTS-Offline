@@ -117,7 +117,9 @@ public class TfIdfHelper {
                 // Term Frequency
                 int tf = shortened[(i * 3) + 2];
                 // Inverted document frequency
-                double idf = Math.log(((double)totalDocs)/documentFrequency[i]);
+                double idf = 0;
+                if (documentFrequency[i] != 0)
+                    idf = Math.log(((double)totalDocs)/documentFrequency[i]);
                 // Tf x Idf value for 1 phrase
                 double result = tf * idf;
                 // Add value to the total of the row
