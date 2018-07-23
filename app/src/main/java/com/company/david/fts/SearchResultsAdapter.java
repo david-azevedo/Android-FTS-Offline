@@ -59,10 +59,12 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
         String doctor = mCursor.getString(mCursor.getColumnIndex(DatabaseTable.COL_DOCTOR));
         String hospital = mCursor.getString(mCursor.getColumnIndex(DatabaseTable.COL_HOSPITAL));
         String transcript = mCursor.getString(mCursor.getColumnIndex(DatabaseTable.COL_TRANSCRIPT));
+        String date = mCursor.getString(mCursor.getColumnIndex(DatabaseTable.COL_DATE));
 
         holder.doctorName.setText(doctor);
         holder.hospitalName.setText(hospital);
         holder.displayTranscript.setText(transcript);
+        holder.displayDate.setText(date);
     }
 
     @Override
@@ -92,6 +94,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
         TextView doctorName;
         TextView hospitalName;
         TextView displayTranscript;
+        TextView displayDate;
 
         public ResultViewHolder(View itemView) {
             super(itemView);
@@ -99,6 +102,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
             doctorName = itemView.findViewById(R.id.tv_display_doctor_name);
             hospitalName = itemView.findViewById(R.id.tv_display_hospital_name);
             displayTranscript = itemView.findViewById(R.id.tv_display_transcript);
+            displayDate = itemView.findViewById(R.id.tv_display_date);
         }
     }
 }
