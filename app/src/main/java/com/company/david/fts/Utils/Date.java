@@ -137,13 +137,13 @@ public class Date {
         // TODO problema de ser bastante abrangente (sat -> saturado, mon -> monte, etc.)
         // Detecting day of week
         Matcher m = WEEK_DAY_PATTERN.matcher(query);
-        if (m.matches()) {
+        if (m.find()) {
             result.day_of_week = WEEK_DAY_TO_CALENDAR.get(m.group().toLowerCase());
         }
 
         // Matching DD/MM/(YY)YY
         m = DATE_DD_MM_YYYY_PATTERN.matcher(query);
-        if (m.matches()) {
+        if (m.find()) {
             result.day = m.group(1);
             result.month = MONTH_INTEGER_TO_CALENDAR.get(Integer.parseInt(m.group(2)));
             if(m.group(3) != null) {
@@ -157,7 +157,7 @@ public class Date {
 
         // Matching MM/DD/(YY)YY
         m = DATE_MM_DD_YYYY_PATTERN.matcher(query);
-        if (m.matches()) {
+        if (m.find()) {
             result.month = MONTH_INTEGER_TO_CALENDAR.get(Integer.parseInt(m.group(1)));
             result.day = m.group(2);
             if(m.group(3) != null) {
@@ -171,7 +171,7 @@ public class Date {
 
         // Matching YYYY/MM/DD
         m = DATE_YYYY_MM_DD_PATTERN.matcher(query);
-        if(m.matches()) {
+        if(m.find()) {
             result.year = m.group(1);
             if (result.year.length() == 2)
                 result.year = "20" + result.year;
@@ -181,43 +181,38 @@ public class Date {
             return result;
         }
 
-        // Identificação da lingua em que o dispositivo está
-        if (Locale.getDefault().getLanguage().equals(new Locale("pt").getLanguage())) {// Português
+        m = DATE_IN_FULL_PT_PATTERN.matcher(query);
+        if (m.find()) {
+            result.day = m.group(1);
+            result.month = MONTH_TO_CALENDAR.get(m.group(2).toLowerCase());
+            result.year = m.group(3);
+            if (result.year.length() == 2)
+                result.year = "20" + result.year;
 
-            m = DATE_IN_FULL_PT_PATTERN.matcher(query);
-            if (m.matches()) {
-                result.day = m.group(1);
-                result.month = MONTH_TO_CALENDAR.get(m.group(2).toLowerCase());
-                result.year = m.group(3);
-                if (result.year.length() == 2)
-                    result.year = "20" + result.year;
+            return result;
+        }
 
-                return result;
-            }
 
-        } else { // Inglês
+        m = DATE_IN_FULL_EN_PATTERN.matcher(query);
+        if (m.find()) {
+            result.day = m.group(1);
+            result.month = MONTH_TO_CALENDAR.get(m.group(2).toLowerCase());
+            result.year = m.group(3);
+            if (result.year.length() == 2)
+                result.year = "20" + result.year;
 
-            m = DATE_IN_FULL_EN_PATTERN.matcher(query);
-            if (m.matches()) {
-                result.day = m.group(1);
-                result.month = MONTH_TO_CALENDAR.get(m.group(2).toLowerCase());
-                result.year = m.group(3);
-                if (result.year.length() == 2)
-                    result.year = "20" + result.year;
+            return result;
+        }
 
-                return result;
-            }
+        m = DATE_IN_FULL_MONTH_FIRST_EN_PATTERN.matcher(query);
+        if (m.find()) {
+            result.day = m.group(2);
+            result.month = MONTH_TO_CALENDAR.get(m.group(1).toLowerCase());
+            result.year = m.group(3);
+            if (result.year.length() == 2)
+                result.year = "20" + result.year;
 
-            m = DATE_IN_FULL_MONTH_FIRST_EN_PATTERN.matcher(query);
-            if (m.matches()) {
-                result.day = m.group(2);
-                result.month = MONTH_TO_CALENDAR.get(m.group(1).toLowerCase());
-                result.year = m.group(3);
-                if (result.year.length() == 2)
-                    result.year = "20" + result.year;
-
-                return result;
-            }
+            return result;
         }
 
         return result;
