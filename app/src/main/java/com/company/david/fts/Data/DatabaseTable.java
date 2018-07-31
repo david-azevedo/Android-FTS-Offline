@@ -129,7 +129,7 @@ public class DatabaseTable {
             String day_of_week = c.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
 
             // String representing the current day, month, year and week day
-            String date = "d>" + String.format("%02d", day) + " m>" + month + " y>" + year + " w>" + day_of_week;
+            String date = "d" + String.format("%02d", day) + " m" + month + " y" + year + " w" + day_of_week;
 
             Log.d("CURRENT DATE", date);
 
@@ -156,18 +156,18 @@ public class DatabaseTable {
 
         //TODO construir a string das datas para adicionar na query
         if (dMatch.day != null) {
-            query += " d>" + dMatch.day;
+            query += " d" + dMatch.day;
         }
         if (dMatch.month != -1) {
             c.set(Calendar.MONTH, dMatch.month);
-            query += " m>" + c.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
+            query += " m" + c.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
         }
         if (dMatch.year != null) {
-            query += " y>" + dMatch.year;
+            query += " y" + dMatch.year;
         }
         if (dMatch.day_of_week != -1) {
             c.set(Calendar.DAY_OF_WEEK, dMatch.day_of_week);
-            query += " w>" + c.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
+            query += " w" + c.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
         }
 
         Log.d("DATE MATCHER:", query);

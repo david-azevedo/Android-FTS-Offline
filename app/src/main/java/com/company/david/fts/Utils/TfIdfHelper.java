@@ -110,7 +110,7 @@ public class TfIdfHelper {
             // Collapsing information from all columns to a single row
             int[] shortened = TfIdfHelper.shortenInitialArray(parsed);
             // Number of phrases in the query
-            int phrases = searchTerms.length;
+            int phrases = shortened[0];
             // Variable to accumulate all tfxIdf values for a given row
             double[] accumulator = new double[phrases];
 
