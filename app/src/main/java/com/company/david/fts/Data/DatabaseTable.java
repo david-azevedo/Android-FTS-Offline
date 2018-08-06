@@ -33,11 +33,11 @@ public class DatabaseTable {
     public static final String COL_TRANSCRIPT = "TRANSCRIPT";
     public static final String COL_DATE = "DATE";
     public static final String COL_TOKENIZE = "tokenize=unicode61";
+    public static final String COL_PREFIX = "prefix=\"4\"";
     public static final String COL_MATCHINFO = "MATCHINFO";
     public static final String COL_SNIPPET = "SNIPPET";
     public static final String COL_OFFSETS = "OFFSETS";
 
-    public static final String ALL_COLUMNS = "*";
     public static final String MATCHINFO = "matchinfo(" + FTS_VIRTUAL_TABLE + ") as " + COL_MATCHINFO;
     public static final String SNIPPET = "snippet(" + FTS_VIRTUAL_TABLE + ") as " + COL_SNIPPET;
     public static final String OFFSETS = "offsets(" + FTS_VIRTUAL_TABLE + ") as " + COL_OFFSETS;
@@ -85,12 +85,13 @@ public class DatabaseTable {
 
         private static final String FTS_TABLE_CREATE =
                 "CREATE VIRTUAL TABLE " + FTS_VIRTUAL_TABLE +
-                        " USING fts3 (" +
+                        " USING fts4 (" +
                         COL_DOCTOR + ", " +
                         COL_HOSPITAL + ", " +
                         COL_DATE + ", " +
                         COL_TRANSCRIPT + ", " +
-                        COL_TOKENIZE + ")";
+                        COL_TOKENIZE + ", " +
+                        COL_PREFIX + ")";
 
         DatabaseOpenHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
