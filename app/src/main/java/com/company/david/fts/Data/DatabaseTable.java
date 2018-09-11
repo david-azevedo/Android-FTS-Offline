@@ -7,12 +7,14 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
+import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.company.david.fts.Utils.Date;
 import com.company.david.fts.Utils.DateMatch;
 import com.company.david.fts.Utils.TfIdfHelper;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
@@ -22,12 +24,15 @@ public class DatabaseTable {
     private static final String TAG = "AppointmentDatabase";
     private static final String DATABASE_NAME = "APPOINTMENT";
     private static final String FTS_VIRTUAL_TABLE = "FTS";
+    private static final String SINOM_TABLE = "SINONIMOS";
+    private static final String SIGLAS_TABLE = "SIGLAS";
     private static final int DATABASE_VERSION = 1;
+    private static final SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy/mm/dd HH:mm:ss",Locale.getDefault());
 
     private static final int MY_256 = 256;
 
     private static DatabaseTable sDatabaseTable = null;
-    // Columns
+    // Columns for table FTS
     public static final String COL_DOCTOR = "DOCTOR";
     public static final String COL_HOSPITAL = "HOSPITAL";
     public static final String COL_TRANSCRIPT = "TRANSCRIPT";
@@ -37,6 +42,14 @@ public class DatabaseTable {
     public static final String COL_MATCHINFO = "MATCHINFO";
     public static final String COL_SNIPPET = "SNIPPET";
     public static final String COL_OFFSETS = "OFFSETS";
+
+    // Columns for table SINONIMOS
+    public static final String COL_SINOM1 = "SINOM1";
+    public static final String COL_SINOM2 = "SINOM2";
+
+    // Columns for table SIGLAS
+    public static final String COL_SIGLA = "SIGLA";
+    public static final String COL_SIGNIFICADO = "SIGNIFICADO";
 
     public static final String MATCHINFO = "matchinfo(" + FTS_VIRTUAL_TABLE + ") as " + COL_MATCHINFO;
     public static final String SNIPPET = "snippet(" + FTS_VIRTUAL_TABLE + ") as " + COL_SNIPPET;
@@ -92,6 +105,15 @@ public class DatabaseTable {
                         COL_TRANSCRIPT + ", " +
                         COL_TOKENIZE + ", " +
                         COL_PREFIX + ")";
+        private static final String SINOMIMOS_TABLE_CREATE =
+                "CREATE TABLE " + SINOM_TABLE + " (" +
+                        COL_SINOM1 + " TEXT PRIMARY KEY," +
+                        COL_SINOM2 + " TEXT NOT NULL)";
+
+        private static final String SIGLAS_TABLE_CREATE =
+                "CREATE TABLE " + SIGLAS_TABLE + " (" +
+                        COL_SIGLA + " TEXT PRIMARY KEY," +
+                        COL_SIGNIFICADO + " TEXT NOT NULL)";
 
         DatabaseOpenHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -103,6 +125,8 @@ public class DatabaseTable {
         public void onCreate(SQLiteDatabase sqLiteDatabase) {
             mDatabase = sqLiteDatabase;
             mDatabase.execSQL(FTS_TABLE_CREATE);
+            mDatabase.execSQL(SINOMIMOS_TABLE_CREATE);
+            mDatabase.execSQL(SIGLAS_TABLE_CREATE);
             Log.w("DATABASE", "Database was created");
 
         }
@@ -112,7 +136,14 @@ public class DatabaseTable {
             Log.w(TAG, "Upgrading database from version " + i + " to " +
                     i1 + ", which will destroy all old data");
             sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + FTS_VIRTUAL_TABLE);
+            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SINOM_TABLE);
+            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SIGLAS_TABLE);
             onCreate(sqLiteDatabase);
+        }
+
+        public long addEntryWithDate(String doctor, String hospital, String transcript, Calendar date) {
+            // TODO complete function
+            return -1;
         }
 
         // Function to add 1 entry to the appointment fts table
@@ -145,7 +176,7 @@ public class DatabaseTable {
     }
 
     //Function to search given a query string
-    public Cursor getWordMatches(String query, String[] columns,boolean orSwitch) {
+    public Cursor getWordMatches(String query, String[] columns) {
         /*
         * By using the table name in the match clause we are searching all
         * columns of the virtual table.
@@ -155,7 +186,16 @@ public class DatabaseTable {
         DateMatch dMatch = Date.detectDates(query);
         Calendar c = Calendar.getInstance();
 
-        //TODO construir a string das datas para adicionar na query
+        String[] search_terms = query.trim().split("[- +]");
+
+        for (String term: search_terms) {
+
+         if (term.length() > 4) {
+             String gram = term.substring(0,4);
+             query += " " + gram + "*";
+         }
+        }
+
         if (dMatch.day != null) {
             query += " d" + dMatch.day;
         }
@@ -181,21 +221,18 @@ public class DatabaseTable {
         // Setting the new search terms in the tfidf helper
         TfIdfHelper.setSearchTerms(terms);
 
-        if (orSwitch) {// Pesquisar com OR
 
-            String args = "";
-            for(int i = 0; i < terms.length; i++) {
-                args += terms[i] + "*";
+        String args = "";
+        for(int i = 0; i < terms.length; i++) {
 
-                if(i != terms.length - 1) {
-                    args += " OR ";
-                }
+            args += terms[i];
+
+            if(i != terms.length - 1) {
+                args += " OR ";
             }
-
-            selectionArgs[0] = args;
-        } else { // Pesquisar com AND
-            selectionArgs[0] = query + "*";
         }
+
+        selectionArgs[0] = args;
 
         Log.d("SELECTION ARGS", Arrays.toString(selectionArgs));
         String selection = FTS_VIRTUAL_TABLE + " MATCH ?";

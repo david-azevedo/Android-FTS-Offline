@@ -29,7 +29,6 @@ import java.util.Date;
 public class SearchActivity extends AppCompatActivity {
 
     private AutoCompleteTextView mSearchData;
-    private Switch mSwitch;
     private Button mSearchButton;
     private RecyclerView mResults;
     private SearchResultsAdapter mAdapter;
@@ -47,7 +46,6 @@ public class SearchActivity extends AppCompatActivity {
         mSearchData = findViewById(R.id.et_search_query);
         mSearchButton = findViewById(R.id.bt_search_action);
         mResults = findViewById(R.id.rv_show_results);
-        mSwitch = findViewById(R.id.sw_and_or);
 
         /* TODO uncomment this for on text entered search
         mSearchData.addTextChangedListener(new TextWatcher() {
@@ -123,7 +121,7 @@ public class SearchActivity extends AppCompatActivity {
             startTime = mDate.getTime();
             if(isCancelled())
                 return null;
-            return DatabaseTable.getInstance(getBaseContext()).getWordMatches(args[0],null, mSwitch.isChecked());
+            return DatabaseTable.getInstance(getBaseContext()).getWordMatches(args[0],null);
         }
 
         @Override

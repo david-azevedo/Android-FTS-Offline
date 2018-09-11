@@ -20,13 +20,6 @@
             android:completionThreshold="3"
             android:hint="Search" />
 
-        <Switch
-            android:id="@+id/sw_and_or"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:checked="true"
-            />
     </LinearLayout>
 
     <Button
