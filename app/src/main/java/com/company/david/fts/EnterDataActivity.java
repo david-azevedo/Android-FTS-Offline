@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.company.david.fts.Data.DatabaseTable;
-import com.company.david.fts.Utils.AppointmentUtils;
 
 public class EnterDataActivity extends AppCompatActivity {
 
@@ -198,15 +197,6 @@ public class EnterDataActivity extends AppCompatActivity {
         // J
         db.addNewEntry("Carlos Fernandes","Hospital de S. João","O paciente apresentava uma fratura no pulso. Foi receitado Feldene.");
 
-
-        /* Fake data
-        while (i <= 10) {
-            String[] temp = AppointmentUtils.getFakeData();
-            db.addNewEntry(temp[0], temp[1], temp[2]);
-            i++;
-        }
-
-        */
     }
 
     // Function to store data and show a Toast (run in the different thread)

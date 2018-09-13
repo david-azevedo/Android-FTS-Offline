@@ -7,13 +7,15 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
-import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.company.david.fts.Utils.Date;
 import com.company.david.fts.Utils.DateMatch;
 import com.company.david.fts.Utils.TfIdfHelper;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -27,7 +29,6 @@ public class DatabaseTable {
     private static final String SINOM_TABLE = "SINONIMOS";
     private static final String SIGLAS_TABLE = "SIGLAS";
     private static final int DATABASE_VERSION = 1;
-    private static final SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy/mm/dd HH:mm:ss",Locale.getDefault());
 
     private static final int MY_256 = 256;
 
@@ -66,6 +67,16 @@ public class DatabaseTable {
         return mDatabaseOpenHelper.addEntry(doctor,hospital,transcript);
     }
 
+    // Wrapper method for add entry with date
+    public long addNewEntryDate(String doctor, String hospital, String transcript,Calendar calendar) {
+        Log.d("CONSULTATION","\n\n\nHospital: "
+                + hospital + "\nDoctor: "
+                + doctor + "\nTranscript:\n\""
+                + transcript + "\n\""
+                + calendar.toString() + "\"");
+        return mDatabaseOpenHelper.addEntryWithDate(doctor,hospital,transcript,calendar);
+    }
+
     public static int[] parseMatchInfoBlob(byte[] blob) {
 
         int length = blob.length;
@@ -95,6 +106,7 @@ public class DatabaseTable {
 
         private final Context mHelperContext;
         private SQLiteDatabase mDatabase;
+        private static final SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
 
         private static final String FTS_TABLE_CREATE =
                 "CREATE VIRTUAL TABLE " + FTS_VIRTUAL_TABLE +
@@ -127,6 +139,31 @@ public class DatabaseTable {
             mDatabase.execSQL(FTS_TABLE_CREATE);
             mDatabase.execSQL(SINOMIMOS_TABLE_CREATE);
             mDatabase.execSQL(SIGLAS_TABLE_CREATE);
+
+            // TODO remover depois de testar
+            Context context = mHelperContext.getApplicationContext();
+            try {
+                InputStream ins = context.getResources().openRawResource(
+                        context.getResources().getIdentifier("base_dados",
+                                "raw", context.getPackageName()));
+
+                BufferedReader reader= null;
+
+                reader = new BufferedReader(new InputStreamReader(ins, "UTF-8"));
+
+                while(reader.ready())
+                {
+                    String line = reader.readLine();
+                    String[] entries = line.split(";");
+                    java.util.Date d = mDateFormat.parse(entries[0]);
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(d);
+
+                    addEntryWithDate(entries[1],entries[2],entries[3],cal);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             Log.w("DATABASE", "Database was created");
 
         }
@@ -141,9 +178,29 @@ public class DatabaseTable {
             onCreate(sqLiteDatabase);
         }
 
-        public long addEntryWithDate(String doctor, String hospital, String transcript, Calendar date) {
-            // TODO complete function
-            return -1;
+        public long addEntryWithDate(String doctor, String hospital, String transcript, Calendar c) {
+
+            if (mDatabase == null) {
+                Log.w("DATABASE", "Database is null!");
+            }
+
+            int day = c.get(Calendar.DAY_OF_MONTH);
+            String month = c.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
+            int year = c.get(Calendar.YEAR);
+            String day_of_week = c.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
+
+            // String representing the current day, month, year and week day
+            String date = "d" + String.format("%02d", day) + " m" + month + " y" + year + " w" + day_of_week;
+
+            Log.d("ENTRY DATE", date);
+
+            ContentValues cv = new ContentValues();
+            cv.put(COL_DOCTOR, doctor);
+            cv.put(COL_HOSPITAL, hospital);
+            cv.put(COL_DATE, date);
+            cv.put(COL_TRANSCRIPT, transcript);
+
+            return mDatabase.insert(FTS_VIRTUAL_TABLE, null, cv);
         }
 
         // Function to add 1 entry to the appointment fts table
