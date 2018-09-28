@@ -23,7 +23,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.company.david.fts.Data.DatabaseTable;
+import com.company.david.fts.Utils.PerformanceTime;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class SearchActivity extends AppCompatActivity {
@@ -47,39 +49,6 @@ public class SearchActivity extends AppCompatActivity {
         mSearchButton = findViewById(R.id.bt_search_action);
         mResults = findViewById(R.id.rv_show_results);
 
-        /* TODO uncomment this for on text entered search
-        mSearchData.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-
-                // If the user is deleting, then don't query again
-                if(before > count)
-                    return;
-
-                String query = charSequence.toString().trim();
-
-                if (query.equals("") || query.equals(mQuery))
-                    return;
-
-                mQuery = query;
-                if(mAsyncTask != null) {
-                    mAsyncTask.cancel(true);
-                }
-                mAsyncTask = new SearchTask();
-                mAsyncTask.execute(query);
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-        */
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
@@ -107,18 +76,13 @@ public class SearchActivity extends AppCompatActivity {
         mAdapter = new SearchResultsAdapter(this);
         mResults.setAdapter(mAdapter);
 
-        // TODO replace AsyncTask with Loader
-
     }
 
     private class SearchTask extends AsyncTask<String, Void, Cursor> {
 
-        private long startTime = 0;
-        private Date mDate = new Date();
-
         @Override
         protected Cursor doInBackground(String... args) {
-            startTime = mDate.getTime();
+            PerformanceTime.setT1(Calendar.getInstance().getTimeInMillis());
             if(isCancelled())
                 return null;
             return DatabaseTable.getInstance(getBaseContext()).getWordMatches(args[0],null);
@@ -132,8 +96,6 @@ public class SearchActivity extends AppCompatActivity {
                 return;
             }
 
-            long timeElapsed = mDate.getTime() - startTime;
-            showToast( cursor.getCount() + " results in " + timeElapsed + " ms.");
             clearResults();
             if(cursor.getCount() <= 0)
                 return;
@@ -141,7 +103,10 @@ public class SearchActivity extends AppCompatActivity {
             if(isCancelled())
                 return;
 
+            PerformanceTime.setT4(Calendar.getInstance().getTimeInMillis());
             mAdapter.swapCursor(cursor);
+            PerformanceTime.setT5(Calendar.getInstance().getTimeInMillis());
+            showToast( PerformanceTime.getToastMessage());
         }
     }
 

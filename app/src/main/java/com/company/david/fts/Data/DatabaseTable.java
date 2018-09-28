@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.company.david.fts.Utils.Date;
 import com.company.david.fts.Utils.DateMatch;
+import com.company.david.fts.Utils.PerformanceTime;
 import com.company.david.fts.Utils.TfIdfHelper;
 
 import java.io.BufferedReader;
@@ -243,16 +244,6 @@ public class DatabaseTable {
         DateMatch dMatch = Date.detectDates(query);
         Calendar c = Calendar.getInstance();
 
-        String[] search_terms = query.trim().split("[- +]");
-
-        for (String term: search_terms) {
-
-         if (term.length() > 4) {
-             String gram = term.substring(0,4);
-             query += " " + gram + "*";
-         }
-        }
-
         if (dMatch.day != null) {
             query += " d" + dMatch.day;
         }
@@ -268,8 +259,23 @@ public class DatabaseTable {
             query += " w" + c.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
         }
 
+        // End date detection
         Log.d("DATE MATCHER:", query);
 
+        PerformanceTime.setT2(Calendar.getInstance().getTimeInMillis());
+        // Start 4gram
+        String[] search_terms = query.trim().split("[- +]");
+
+        for (String term: search_terms) {
+
+            if (term.length() > 4) {
+                String gram = term.substring(0,4);
+                query += " " + gram + "*";
+            }
+        }
+        // End 4gram
+
+        PerformanceTime.setT3(Calendar.getInstance().getTimeInMillis());
         String[] selectionArgs = new String[1];
         String[] terms = query.trim().split("[- +]");
 
