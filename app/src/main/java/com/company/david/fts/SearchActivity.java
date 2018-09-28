@@ -106,7 +106,7 @@ public class SearchActivity extends AppCompatActivity {
             PerformanceTime.setT4(Calendar.getInstance().getTimeInMillis());
             mAdapter.swapCursor(cursor);
             PerformanceTime.setT5(Calendar.getInstance().getTimeInMillis());
-            showToast( PerformanceTime.getToastMessage());
+            showToast( "Total results: " + cursor.getCount() + "\n" + PerformanceTime.getToastMessage());
         }
     }
 

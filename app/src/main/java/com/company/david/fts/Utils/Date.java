@@ -211,8 +211,9 @@ public class Date {
             result.day = m.group(2);
             result.month = MONTH_TO_CALENDAR.get(m.group(1).toLowerCase());
             result.year = m.group(3);
-            if (result.year.length() == 2)
-                result.year = "20" + result.year;
+            if(result.year != null)
+                if (result.year.length() == 2)
+                    result.year = "20" + result.year;
 
             return result;
         }
