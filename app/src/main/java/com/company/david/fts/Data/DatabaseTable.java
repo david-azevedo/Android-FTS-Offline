@@ -234,46 +234,52 @@ public class DatabaseTable {
     }
 
     //Function to search given a query string
-    public Cursor getWordMatches(String query, String[] columns) {
+    public Cursor getWordMatches(String query, String[] columns,boolean use4gram, boolean useDate) {
         /*
         * By using the table name in the match clause we are searching all
         * columns of the virtual table.
         * */
 
-        // Detecting dates
-        DateMatch dMatch = Date.detectDates(query);
-        Calendar c = Calendar.getInstance();
+        if( useDate ) {
+            Log.d("SEARCH", "Using dates!");
+            // Detecting dates
+            DateMatch dMatch = Date.detectDates(query);
+            Calendar c = Calendar.getInstance();
 
-        if (dMatch.day != null) {
-            query += " d" + dMatch.day;
-        }
-        if (dMatch.month != -1) {
-            c.set(Calendar.MONTH, dMatch.month);
-            query += " m" + c.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
-        }
-        if (dMatch.year != null) {
-            query += " y" + dMatch.year;
-        }
-        if (dMatch.day_of_week != -1) {
-            c.set(Calendar.DAY_OF_WEEK, dMatch.day_of_week);
-            query += " w" + c.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
+            if (dMatch.day != null) {
+                query += " d" + dMatch.day;
+            }
+            if (dMatch.month != -1) {
+                c.set(Calendar.MONTH, dMatch.month);
+                query += " m" + c.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
+            }
+            if (dMatch.year != null) {
+                query += " y" + dMatch.year;
+            }
+            if (dMatch.day_of_week != -1) {
+                c.set(Calendar.DAY_OF_WEEK, dMatch.day_of_week);
+                query += " w" + c.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
+            }
         }
 
         // End date detection
         Log.d("DATE MATCHER:", query);
 
         PerformanceTime.setT2(Calendar.getInstance().getTimeInMillis());
-        // Start 4gram
-        String[] search_terms = query.trim().split("[- +]");
+        if (use4gram) {
+            Log.d("SEARCH", "Using 4gram!");
+            // Start 4gram
+            String[] search_terms = query.trim().split("[- +]");
 
-        for (String term: search_terms) {
+            for (String term : search_terms) {
 
-            if (term.length() > 4) {
-                String gram = term.substring(0,4);
-                query += " " + gram + "*";
+                if (term.length() > 4) {
+                    String gram = term.substring(0, 4);
+                    query += " " + gram + "*";
+                }
             }
+            // End 4gram
         }
-        // End 4gram
 
         PerformanceTime.setT3(Calendar.getInstance().getTimeInMillis());
         String[] selectionArgs = new String[1];

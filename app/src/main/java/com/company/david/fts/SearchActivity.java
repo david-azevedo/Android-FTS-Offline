@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -33,9 +34,13 @@ public class SearchActivity extends AppCompatActivity {
     private AutoCompleteTextView mSearchData;
     private Button mSearchButton;
     private RecyclerView mResults;
+    private SwitchCompat m4GramSwitch;
+    private SwitchCompat mDateSwitch;
     private SearchResultsAdapter mAdapter;
     private SearchTask mAsyncTask;
     private String mQuery = "";
+    private boolean mLast4gramState = false;
+    private boolean mLastDateState = false;
     private Toast mToast = null;
 
     @Override
@@ -48,6 +53,8 @@ public class SearchActivity extends AppCompatActivity {
         mSearchData = findViewById(R.id.et_search_query);
         mSearchButton = findViewById(R.id.bt_search_action);
         mResults = findViewById(R.id.rv_show_results);
+        m4GramSwitch = findViewById(R.id.sw_4gram);
+        mDateSwitch = findViewById(R.id.sw_date);
 
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -56,11 +63,16 @@ public class SearchActivity extends AppCompatActivity {
 
                 String query = mSearchData.getText().toString().trim();
 
-                if (query.equals("") || query.equals(mQuery))
+                if (query.equals("") ||
+                        (query.equals(mQuery) &&
+                        mLast4gramState == m4GramSwitch.isChecked() &&
+                        mLastDateState == mDateSwitch.isChecked()))
                     return;
 
                 query = query.replaceAll("[.,]","");
                 mQuery = query;
+                mLast4gramState = m4GramSwitch.isChecked();
+                mLastDateState = mDateSwitch.isChecked();
                 if(mAsyncTask != null) {
                     mAsyncTask.cancel(true);
                 }
@@ -85,7 +97,7 @@ public class SearchActivity extends AppCompatActivity {
             PerformanceTime.setT1(Calendar.getInstance().getTimeInMillis());
             if(isCancelled())
                 return null;
-            return DatabaseTable.getInstance(getBaseContext()).getWordMatches(args[0],null);
+            return DatabaseTable.getInstance(getBaseContext()).getWordMatches(args[0],null,m4GramSwitch.isChecked(), mDateSwitch.isChecked());
         }
 
         @Override
