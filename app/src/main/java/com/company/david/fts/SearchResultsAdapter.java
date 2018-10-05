@@ -80,7 +80,6 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
 
         mCursor = newCursor;
 
-        // TODO Check tf x idf call
         if (mContext.getClass() == SearchActivity.class) {
             Log.d("SEARCHRESULTSADAPTER", "Calculating Tf x Idf");
             offset = TfIdfHelper.calcTfIdf(this.mContext, mCursor);

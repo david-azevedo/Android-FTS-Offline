@@ -134,14 +134,7 @@ public class DatabaseTable {
             mDatabase = getWritableDatabase();
         }
 
-        @Override
-        public void onCreate(SQLiteDatabase sqLiteDatabase) {
-            mDatabase = sqLiteDatabase;
-            mDatabase.execSQL(FTS_TABLE_CREATE);
-            mDatabase.execSQL(SINOMIMOS_TABLE_CREATE);
-            mDatabase.execSQL(SIGLAS_TABLE_CREATE);
-
-            // TODO remover depois de testar
+        private void addDefaultEntries() {
             Context context = mHelperContext.getApplicationContext();
             try {
                 InputStream ins = context.getResources().openRawResource(
@@ -165,6 +158,41 @@ public class DatabaseTable {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+
+        private void addDefaultSinons() {
+
+            Context context = mHelperContext.getApplicationContext();
+            try {
+                InputStream ins = context.getResources().openRawResource(
+                        context.getResources().getIdentifier("sinom_entries",
+                                "raw", context.getPackageName()));
+
+                BufferedReader reader= null;
+
+                reader = new BufferedReader(new InputStreamReader(ins, "UTF-8"));
+
+                while(reader.ready())
+                {
+                    String line = reader.readLine();
+                    mDatabase.execSQL(line);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase sqLiteDatabase) {
+            mDatabase = sqLiteDatabase;
+            mDatabase.execSQL(FTS_TABLE_CREATE);
+            mDatabase.execSQL(SINOMIMOS_TABLE_CREATE);
+            mDatabase.execSQL(SIGLAS_TABLE_CREATE);
+
+            addDefaultEntries();
+            addDefaultSinons();
+
             Log.w("DATABASE", "Database was created");
 
         }
@@ -307,6 +335,12 @@ public class DatabaseTable {
         String selection = FTS_VIRTUAL_TABLE + " MATCH ?";
 
         return query(selection, selectionArgs, columns);
+    }
+
+    // TODO Write function that given a sinom will search the database and retry the first result
+    public String getSinom(String expression) {
+
+        return "";
     }
 
     //Function to get all data rows
