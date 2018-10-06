@@ -46,6 +46,8 @@
             android:text="Datas"
             android:textOn="On"
             android:textOff="Off"/>
+
+        <!-- TODO add toggle for synonyms -->
     </LinearLayout>
 
     <Button

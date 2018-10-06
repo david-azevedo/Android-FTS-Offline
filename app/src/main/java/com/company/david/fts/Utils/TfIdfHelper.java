@@ -136,7 +136,6 @@ public class TfIdfHelper {
         ArrayList<Double> values = calculateVectorSpaceModel(querySpaceVector, valuesArray);
         int[] result = getOrderedIndexes(values);
 
-        // TODO Remove print
         Log.d("TF IDF INDEXES", Arrays.toString(result));
         Log.d("TF IDF VALUES",values.toString());
 

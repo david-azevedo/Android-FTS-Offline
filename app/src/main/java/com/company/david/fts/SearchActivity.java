@@ -1,33 +1,23 @@
 package com.company.david.fts;
 
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.provider.ContactsContract;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.company.david.fts.Data.DatabaseTable;
 import com.company.david.fts.Utils.PerformanceTime;
 
 import java.util.Calendar;
-import java.util.Date;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -115,9 +105,9 @@ public class SearchActivity extends AppCompatActivity {
             if(isCancelled())
                 return;
 
-            PerformanceTime.setT4(Calendar.getInstance().getTimeInMillis());
-            mAdapter.swapCursor(cursor);
             PerformanceTime.setT5(Calendar.getInstance().getTimeInMillis());
+            mAdapter.swapCursor(cursor);
+            PerformanceTime.setT6(Calendar.getInstance().getTimeInMillis());
             showToast( "Total results: " + cursor.getCount() + "\n" + PerformanceTime.getToastMessage());
         }
     }

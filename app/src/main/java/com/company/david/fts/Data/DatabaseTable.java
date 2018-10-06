@@ -18,8 +18,10 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 public class DatabaseTable {
@@ -175,6 +177,7 @@ public class DatabaseTable {
                 while(reader.ready())
                 {
                     String line = reader.readLine();
+                    Log.d("EXEC SQL", line);
                     mDatabase.execSQL(line);
                 }
             } catch (Exception e) {
@@ -275,16 +278,20 @@ public class DatabaseTable {
             Calendar c = Calendar.getInstance();
 
             if (dMatch.day != null) {
+                PerformanceTime.setFoundDate();
                 query += " d" + dMatch.day;
             }
             if (dMatch.month != -1) {
+                PerformanceTime.setFoundDate();
                 c.set(Calendar.MONTH, dMatch.month);
                 query += " m" + c.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
             }
             if (dMatch.year != null) {
+                PerformanceTime.setFoundDate();
                 query += " y" + dMatch.year;
             }
             if (dMatch.day_of_week != -1) {
+                PerformanceTime.setFoundDate();
                 c.set(Calendar.DAY_OF_WEEK, dMatch.day_of_week);
                 query += " w" + c.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
             }
@@ -312,8 +319,27 @@ public class DatabaseTable {
         PerformanceTime.setT3(Calendar.getInstance().getTimeInMillis());
         String[] selectionArgs = new String[1];
         String[] terms = query.trim().split("[- +]");
+        int array_size = terms.length;
+        List<String> terms_list = Arrays.asList(terms);
 
-        Log.d("TERMS FOR SEARCH", Arrays.toString(terms));
+        Log.d("SEARCH TERMS B SYNONYMS", Arrays.toString(terms));
+
+        for (String term:terms) {
+            String sinom = getSinom(term);
+            if (sinom != null) {
+                PerformanceTime.setFoundSinom();
+                array_size++;
+                // TODO faze debug a esta linha
+                terms_list.add(sinom);
+            }
+        }
+        terms = terms_list.toArray(new String[array_size]);
+
+        PerformanceTime.setT4(Calendar.getInstance().getTimeInMillis());
+
+        Log.d("SYNONYM","Ended search for synonyms");
+
+        Log.d("SEARCH TERMS A SYNONYMS", Arrays.toString(terms));
 
         // Setting the new search terms in the tfidf helper
         TfIdfHelper.setSearchTerms(terms);
@@ -337,10 +363,19 @@ public class DatabaseTable {
         return query(selection, selectionArgs, columns);
     }
 
-    // TODO Write function that given a sinom will search the database and retry the first result
     public String getSinom(String expression) {
 
-        return "";
+        Cursor result = mDatabaseOpenHelper.getReadableDatabase().rawQuery("SELECT " + COL_SINOM2 + " FROM " +
+                SINOM_TABLE + " WHERE " + COL_SINOM1 + " = ?", new String[] {expression});
+
+        String sinom = null;
+        if (result != null) {
+            if (result.moveToFirst()) {
+                sinom = result.getString(0);
+                result.close();
+            }
+        }
+        return sinom;
     }
 
     //Function to get all data rows

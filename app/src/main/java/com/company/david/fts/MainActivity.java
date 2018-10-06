@@ -3,8 +3,11 @@ package com.company.david.fts;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import com.company.david.fts.Data.DatabaseTable;
 
 
 public class MainActivity extends AppCompatActivity {
