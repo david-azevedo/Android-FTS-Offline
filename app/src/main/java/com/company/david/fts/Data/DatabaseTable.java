@@ -320,7 +320,7 @@ public class DatabaseTable {
         String[] selectionArgs = new String[1];
         String[] terms = query.trim().split("[- +]");
         int array_size = terms.length;
-        List<String> terms_list = Arrays.asList(terms);
+        ArrayList<String> terms_list = new ArrayList<String>(Arrays.asList(terms));
 
         Log.d("SEARCH TERMS B SYNONYMS", Arrays.toString(terms));
 
@@ -328,9 +328,10 @@ public class DatabaseTable {
             String sinom = getSinom(term);
             if (sinom != null) {
                 PerformanceTime.setFoundSinom();
-                array_size++;
-                // TODO faze debug a esta linha
-                terms_list.add(sinom);
+
+                String[] temp = sinom.split(" ");
+                array_size+= temp.length;
+                terms_list.addAll(Arrays.asList(temp));
             }
         }
         terms = terms_list.toArray(new String[array_size]);
@@ -366,7 +367,7 @@ public class DatabaseTable {
     public String getSinom(String expression) {
 
         Cursor result = mDatabaseOpenHelper.getReadableDatabase().rawQuery("SELECT " + COL_SINOM2 + " FROM " +
-                SINOM_TABLE + " WHERE " + COL_SINOM1 + " = ?", new String[] {expression});
+                SINOM_TABLE + " WHERE " + COL_SINOM1 + " = ? COLLATE NOCASE", new String[] {expression});
 
         String sinom = null;
         if (result != null) {
