@@ -32,22 +32,29 @@
         <android.support.v7.widget.SwitchCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/sw_4gram"
-            android:checked="true"
-            android:text="4gram"
-            android:textOn="On"
-            android:textOff="Off"/>
-
-        <android.support.v7.widget.SwitchCompat
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/sw_date"
             android:checked="true"
             android:text="Datas"
             android:textOn="On"
             android:textOff="Off"/>
 
-        <!-- TODO add toggle for synonyms -->
+        <android.support.v7.widget.SwitchCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/sw_synonym"
+            android:checked="true"
+            android:text="Sinónimos"
+            android:textOn="On"
+            android:textOff="Off"/>
+
+        <android.support.v7.widget.SwitchCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/sw_4gram"
+            android:checked="true"
+            android:text="4gram"
+            android:textOn="On"
+            android:textOff="Off"/>
     </LinearLayout>
 
     <Button

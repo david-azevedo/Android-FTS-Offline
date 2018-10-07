@@ -265,7 +265,8 @@ public class DatabaseTable {
     }
 
     //Function to search given a query string
-    public Cursor getWordMatches(String query, String[] columns,boolean use4gram, boolean useDate) {
+    public Cursor getWordMatches(String query, String[] columns,
+                                 boolean use4gram, boolean useDate, boolean useSynonym) {
         /*
         * By using the table name in the match clause we are searching all
         * columns of the virtual table.
@@ -301,6 +302,38 @@ public class DatabaseTable {
         Log.d("DATE MATCHER:", query);
 
         PerformanceTime.setT2(Calendar.getInstance().getTimeInMillis());
+
+        String[] selectionArgs = new String[1];
+        String[] terms = query.trim().split("[- +]");
+
+        if ( useSynonym ) {
+
+            int array_size = terms.length;
+            ArrayList<String> terms_list = new ArrayList<String>(Arrays.asList(terms));
+
+            Log.d("SEARCH TERMS B SYNONYMS", Arrays.toString(terms));
+
+            for (String term : terms) {
+                String sinom = getSinom(term);
+                if (sinom != null) {
+                    PerformanceTime.setFoundSinom();
+
+                    String[] temp = sinom.split(" ");
+                    array_size += temp.length;
+                    terms_list.addAll(Arrays.asList(temp));
+                }
+            }
+
+            terms = terms_list.toArray(new String[array_size]);
+
+            Log.d("SYNONYM", "Ended search for synonyms");
+
+            Log.d("SEARCH TERMS A SYNONYMS", Arrays.toString(terms));
+
+        }
+
+        PerformanceTime.setT3(Calendar.getInstance().getTimeInMillis());
+
         if (use4gram) {
             Log.d("SEARCH", "Using 4gram!");
             // Start 4gram
@@ -316,31 +349,7 @@ public class DatabaseTable {
             // End 4gram
         }
 
-        PerformanceTime.setT3(Calendar.getInstance().getTimeInMillis());
-        String[] selectionArgs = new String[1];
-        String[] terms = query.trim().split("[- +]");
-        int array_size = terms.length;
-        ArrayList<String> terms_list = new ArrayList<String>(Arrays.asList(terms));
-
-        Log.d("SEARCH TERMS B SYNONYMS", Arrays.toString(terms));
-
-        for (String term:terms) {
-            String sinom = getSinom(term);
-            if (sinom != null) {
-                PerformanceTime.setFoundSinom();
-
-                String[] temp = sinom.split(" ");
-                array_size+= temp.length;
-                terms_list.addAll(Arrays.asList(temp));
-            }
-        }
-        terms = terms_list.toArray(new String[array_size]);
-
         PerformanceTime.setT4(Calendar.getInstance().getTimeInMillis());
-
-        Log.d("SYNONYM","Ended search for synonyms");
-
-        Log.d("SEARCH TERMS A SYNONYMS", Arrays.toString(terms));
 
         // Setting the new search terms in the tfidf helper
         TfIdfHelper.setSearchTerms(terms);

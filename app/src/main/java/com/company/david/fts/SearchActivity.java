@@ -26,11 +26,13 @@ public class SearchActivity extends AppCompatActivity {
     private RecyclerView mResults;
     private SwitchCompat m4GramSwitch;
     private SwitchCompat mDateSwitch;
+    private SwitchCompat mSynonymSwitch;
     private SearchResultsAdapter mAdapter;
     private SearchTask mAsyncTask;
     private String mQuery = "";
     private boolean mLast4gramState = false;
     private boolean mLastDateState = false;
+    private boolean mLastSynonymState = false;
     private Toast mToast = null;
 
     @Override
@@ -45,6 +47,7 @@ public class SearchActivity extends AppCompatActivity {
         mResults = findViewById(R.id.rv_show_results);
         m4GramSwitch = findViewById(R.id.sw_4gram);
         mDateSwitch = findViewById(R.id.sw_date);
+        mSynonymSwitch = findViewById(R.id.sw_synonym);
 
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -56,13 +59,15 @@ public class SearchActivity extends AppCompatActivity {
                 if (query.equals("") ||
                         (query.equals(mQuery) &&
                         mLast4gramState == m4GramSwitch.isChecked() &&
-                        mLastDateState == mDateSwitch.isChecked()))
+                        mLastDateState == mDateSwitch.isChecked() &&
+                        mLastSynonymState == mSynonymSwitch.isChecked()))
                     return;
 
                 query = query.replaceAll("[.,]","");
                 mQuery = query;
                 mLast4gramState = m4GramSwitch.isChecked();
                 mLastDateState = mDateSwitch.isChecked();
+                mLastSynonymState = mSynonymSwitch.isChecked();
                 if(mAsyncTask != null) {
                     mAsyncTask.cancel(true);
                 }
@@ -87,7 +92,8 @@ public class SearchActivity extends AppCompatActivity {
             PerformanceTime.setT1(Calendar.getInstance().getTimeInMillis());
             if(isCancelled())
                 return null;
-            return DatabaseTable.getInstance(getBaseContext()).getWordMatches(args[0],null,m4GramSwitch.isChecked(), mDateSwitch.isChecked());
+            return DatabaseTable.getInstance(getBaseContext()).getWordMatches(args[0],null,
+                    m4GramSwitch.isChecked(), mDateSwitch.isChecked(), mSynonymSwitch.isChecked());
         }
 
         @Override

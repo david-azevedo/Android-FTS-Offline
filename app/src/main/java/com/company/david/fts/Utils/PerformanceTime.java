@@ -63,8 +63,8 @@ public final class PerformanceTime {
         }
 
         res += "Date Detection ended " + (t2 - t1) + "ms.\n";
-        res += "4gram conversion ended " + (t3 - t1) + "ms.\n";
-        res += "Synonym ended " + (t4 - t1) + "ms.\n";
+        res += "Synonym ended " + (t3 - t1) + "ms.\n";
+        res += "4gram conversion ended " + (t4 - t1) + "ms.\n";
         res += "Sql ended " + (t5 - t1) + "ms.\n";
         res += "Tf idf ended " + (t6 - t1) + "ms.\n";
 
