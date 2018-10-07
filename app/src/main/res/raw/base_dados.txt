@@ -98,3 +98,8 @@
 2018/08/01 01:02:03;Guilherme Fontes;Centro Médico Manuel Coutinho;Os resultados do eletrocardiograma mostram que a senhora possui aritmia deverá tomar um anti-coagulante genérico se sentir quebras de tensão
 2017/09/11 11:09:11;Ana Claudia;Clinica da Moita;Se a azia voltar tome reni se for indigestão tome imodium rapid
 2018/05/03 15:24:45;Enfermeiro Rubén;Hospital Santo Tirso;Para já ainda não sabemos aquilo que se está a passar vamos mantê-la sob observação aqui no hospital durante os próximos dias
+2017/06/30 16:00:00;Daniel Duarte;Hospital Infante D. Pedro;Tem uma pisadura no braço direito que poderá ter sido provocada pela vacina que levou há umas semanas eu recomendo que aplique gelo e descanse o braço
+2018/04/06 10:30:00;Daniel Duarte;Hospital Infante D. Pedro;O seu hematoma tem-se alastrado, pelo que recomendo que aplique esta pomada duas vezes ao dia
+2018/08/24 11:15:23;Carolina Cardoso;CHSJ;A Dra. diz que tive um acidente vascular cerebral, ou AVC. Isso pode ter sido provocado por vários fatores, e não é claro qual foi o fator determinante. Como estava já no hospital não houve consequências muito graves, mas tenho de mudar o meu estilo de vida se quero evitar que isto se repita.
+2018/08/30 17:24:41;Carolina Cardoso;CHSJ;O paciente parece estar a recuperar do seu acidente vascular cerebral recomendo descanso continuado e vou passar um atestado para a próxima semana porque receio que o regresso ao trabalho possa piorar a sua situação
+2019/01/03 15:00:00;Carolina Cardoso;CHSJ;Vou ter uma consulta de rotina neste dia por causa do meu AVC

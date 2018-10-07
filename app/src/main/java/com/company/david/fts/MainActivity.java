@@ -9,8 +9,6 @@ import android.widget.Button;
 
 import com.company.david.fts.Data.DatabaseTable;
 
-// TODO dar update à base de dados de testes
-
 public class MainActivity extends AppCompatActivity {
 
     @Override
