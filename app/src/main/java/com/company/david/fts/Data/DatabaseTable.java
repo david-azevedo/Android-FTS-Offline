@@ -304,7 +304,7 @@ public class DatabaseTable {
         PerformanceTime.setT2(Calendar.getInstance().getTimeInMillis());
 
         String[] selectionArgs = new String[1];
-        String[] terms = query.trim().split("[- +]");
+        String[] terms = query.trim().split("[- +]+");
 
         if ( useSynonym ) {
 
@@ -318,7 +318,7 @@ public class DatabaseTable {
                 if (sinom != null) {
                     PerformanceTime.setFoundSinom();
 
-                    String[] temp = sinom.split(" ");
+                    String[] temp = sinom.split(" +");
                     array_size += temp.length;
                     terms_list.addAll(Arrays.asList(temp));
                 }
@@ -337,7 +337,7 @@ public class DatabaseTable {
         if (use4gram) {
             Log.d("SEARCH", "Using 4gram!");
             // Start 4gram
-            String[] search_terms = query.trim().split("[- +]");
+            String[] search_terms = query.trim().split("[- +]+");
 
             for (String term : search_terms) {
 
