@@ -304,7 +304,8 @@ public class DatabaseTable {
         PerformanceTime.setT2(Calendar.getInstance().getTimeInMillis());
 
         String[] selectionArgs = new String[1];
-        String[] terms = query.trim().split("[- +]+");
+        // TODO tentar encontrar um caracter especial para fazer esta substituição
+        String[] terms = query.trim().replaceAll("[\\/\\-.]","").split("[- +]+");
 
         if ( useSynonym ) {
 
@@ -342,6 +343,9 @@ public class DatabaseTable {
 
             for (String term : terms) {
 
+                if (term.matches(".*\\d+.*"))
+                    continue;
+
                 if (term.length() > 4) {
                     String gram = term.substring(0, 4);
                     array_size++;
@@ -356,6 +360,12 @@ public class DatabaseTable {
         PerformanceTime.setT4(Calendar.getInstance().getTimeInMillis());
 
         // Setting the new search terms in the tfidf helper
+
+        for (String term: terms) {
+            term = "\"" + term + "\"";
+        }
+        Log.d("Setting terms for tfidf", Arrays.toString(terms));
+
         TfIdfHelper.setSearchTerms(terms);
 
 
