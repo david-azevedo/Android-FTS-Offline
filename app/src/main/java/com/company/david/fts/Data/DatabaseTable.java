@@ -337,15 +337,19 @@ public class DatabaseTable {
         if (use4gram) {
             Log.d("SEARCH", "Using 4gram!");
             // Start 4gram
-            String[] search_terms = query.trim().split("[- +]+");
+            int array_size = terms.length;
+            ArrayList<String> temp_list = new ArrayList<String>(Arrays.asList(terms));
 
-            for (String term : search_terms) {
+            for (String term : terms) {
 
                 if (term.length() > 4) {
                     String gram = term.substring(0, 4);
-                    query += " " + gram + "*";
+                    array_size++;
+                    temp_list.add(gram + "*");
                 }
             }
+            terms = temp_list.toArray(new String[array_size]);
+            Log.d("SEARCH TERMS A 4Gram", Arrays.toString(terms));
             // End 4gram
         }
 
@@ -368,7 +372,7 @@ public class DatabaseTable {
         selectionArgs[0] = args;
 
         Log.d("SELECTION ARGS", Arrays.toString(selectionArgs));
-        String selection = FTS_VIRTUAL_TABLE + " MATCH ?";
+        String selection = FTS_VIRTUAL_TABLE + " MATCH ? COLLATE NOCASE";
 
         return query(selection, selectionArgs, columns);
     }
@@ -421,6 +425,7 @@ public class DatabaseTable {
 
         Cursor cursor = builder.query(mDatabaseOpenHelper.getReadableDatabase(),
                 mColumns, selection, selectionArgs, null, null, null);
+
 
         if (cursor == null) {
             return null;
