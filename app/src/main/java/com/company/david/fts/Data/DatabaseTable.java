@@ -304,8 +304,7 @@ public class DatabaseTable {
         PerformanceTime.setT2(Calendar.getInstance().getTimeInMillis());
 
         String[] selectionArgs = new String[1];
-        // TODO tentar encontrar um caracter especial para fazer esta substituição
-        String[] terms = query.trim().replaceAll("[\\/\\-.]","").split("[- +]+");
+        String[] terms = query.trim().replaceAll("[\\/\\-.]","-").split("[- +]+");
 
         if ( useSynonym ) {
 
